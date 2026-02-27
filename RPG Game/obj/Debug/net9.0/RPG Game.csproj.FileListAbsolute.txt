@@ -1,0 +1,14 @@
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/bin/Debug/net9.0/RPG Game
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/bin/Debug/net9.0/RPG Game.deps.json
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/bin/Debug/net9.0/RPG Game.runtimeconfig.json
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/bin/Debug/net9.0/RPG Game.dll
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/bin/Debug/net9.0/RPG Game.pdb
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.GeneratedMSBuildEditorConfig.editorconfig
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.AssemblyInfoInputs.cache
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.AssemblyInfo.cs
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.csproj.CoreCompileInputs.cache
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.dll
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/refint/RPG Game.dll
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.pdb
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.genruntimeconfig.cache
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/ref/RPG Game.dll
