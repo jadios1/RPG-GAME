@@ -1,11 +1,38 @@
 {
   "version": 3,
   "targets": {
-    "net9.0": {}
+    "net9.0": {
+      "EmojiOne/4.5.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/EmojiOne.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/EmojiOne.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "EmojiOne/4.5.0": {
+      "sha512": "YEuKPSg8xenkcRMxCX6iA2QlfOxxqpbHRN16FiA8etqROCmYSg8umQFjZ4tlJsnd8HcxX9/n7usCJqu8puQyOg==",
+      "type": "package",
+      "path": "emojione/4.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "1f984.png",
+        "README.md",
+        "emojione.4.5.0.nupkg.sha512",
+        "emojione.nuspec",
+        "lib/netstandard2.0/EmojiOne.dll"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net9.0": []
+    "net9.0": [
+      "EmojiOne >= 4.5.0"
+    ]
   },
   "packageFolders": {
     "/Users/janczyzewski/.nuget/packages/": {}
@@ -50,6 +77,12 @@
     "frameworks": {
       "net9.0": {
         "targetAlias": "net9.0",
+        "dependencies": {
+          "EmojiOne": {
+            "target": "Package",
+            "version": "[4.5.0, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",

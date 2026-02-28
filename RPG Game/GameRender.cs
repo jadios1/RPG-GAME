@@ -18,8 +18,15 @@ public class GameRender
                     Console.Write(map.GetField(i, j).GetSymbol());
                 }
             }
+
+
             Console.WriteLine();
 
+        }
+        Console.WriteLine("inventory");
+        for (int i = 0; i < player.Inventory.Count; i++)
+        {
+            Console.WriteLine(player.Inventory[i]);
         }
         Console.WriteLine(player.X + " " + player.Y);
     }

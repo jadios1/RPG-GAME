@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Nqz6Z011Z6M=",
+  "dgSpecHash": "LcxROKOxUzI=",
   "success": true,
   "projectFilePath": "/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/RPG Game.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/Users/janczyzewski/.nuget/packages/emojione/4.5.0/emojione.4.5.0.nupkg.sha512"
+  ],
   "logs": []
 }

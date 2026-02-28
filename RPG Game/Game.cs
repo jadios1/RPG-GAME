@@ -2,40 +2,49 @@ namespace RPG_Game;
 
 public class Game
 {
-    private Map map;
-    private Player player;
-    private GameRender gameRender;
+    private Map _map;
+    private Player _player;
+    private GameRender _gameRender;
 
     public void Run()
     {
         while (true)
         {
             Console.SetCursorPosition(0, 0);
-            gameRender.DrawMap(map,map.Width,map.Height,player);
+            _gameRender.DrawMap(_map,_map.Width,_map.Height,_player);
             var pressedkey = Console.ReadKey().Key;
+            var currentfield = _map.GetField(_player.X, _player.Y);
             if (pressedkey == ConsoleKey.W)
             {
-                map.TryMovePlayer(player,-1,0);
+                _map.TryMovePlayer(_player,-1,0);
             }
             else if (pressedkey == ConsoleKey.S)
             {
-                map.TryMovePlayer(player,1,0);
+                _map.TryMovePlayer(_player,1,0);
             }
             else if (pressedkey == ConsoleKey.A)
             {
-                map.TryMovePlayer(player,0,-1);
+                _map.TryMovePlayer(_player,0,-1);
             }
             else if (pressedkey == ConsoleKey.D)
             {
-                map.TryMovePlayer(player,0,1);
+                _map.TryMovePlayer(_player,0,1);
+            }
+            else if (pressedkey == ConsoleKey.E)
+            {
+                
+                if (currentfield.IsEmpty() == false)
+                {
+                    _player.PutIntoInventory(currentfield.GetItem());
+                }
             }
         }
     }
 
     public Game()
     {
-        map = new Map(40,20);
-        player = new Player();
-        gameRender = new GameRender();
+        _map = new Map(40,20);
+        _player = new Player();
+        _gameRender = new GameRender();
     }
 }

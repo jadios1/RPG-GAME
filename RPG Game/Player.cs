@@ -16,13 +16,14 @@ public class Player : IDisplayable
         Health = 100;
         LeftHand = null;
         RightHand = null;
+        Inventory = new List<Item>(5);
     }
-    
+
+    public List<Item> Inventory { get; }
     public int X{ get;private set; }
     public int Y{ get;private set; }
     private int Strength { get; set; }
     private int Dexterity{ get; set; }
-    
     private int Health{ get; set; }
     private int Luck{ get; set; }
     private int Aggression{ get; set; }
@@ -36,6 +37,17 @@ public class Player : IDisplayable
     {
         X += dx;
         Y += dy;
+    }
+
+    public bool PutIntoInventory(Item item)
+    {
+        if (Inventory.Count() < 5)
+        {
+            Inventory.Add(item);
+            return true;
+        }
+        return false;
+        
     }
     
     

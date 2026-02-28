@@ -12,3 +12,7 @@
 /Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.pdb
 /Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.genruntimeconfig.cache
 /Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/ref/RPG Game.dll
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.sourcelink.json
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/bin/Debug/net9.0/EmojiOne.dll
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.csproj.AssemblyReference.cache
+/Users/janczyzewski/Documents/PROJEKT OOD/RPG Game/RPG Game/obj/Debug/net9.0/RPG Game.csproj.Up2Date
