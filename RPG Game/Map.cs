@@ -8,18 +8,18 @@ public class Map
         Width = _width;
         fields = new Field[_width, _height];
 
-        for (int i = 0; i < Width; i++)
+        for (int y = 0; y < Height; y++)
         {
-            for (int j = 0; j < Height; j++)
+            for (int x = 0; x < Width; x++)
             {
-                fields[i, j] = new EmptyField();
+                fields[x, y] = new EmptyField();
+                if (y == 0 || x == 0 || y == Height-1 || x == Width-1)
+                {
+                    PlaceWall(x,y);
+                }
             }
         }
 
-        for (int i = 0; i < 20; i++)
-        {
-            PlaceWall(4,i);
-        }
 
         Coin hello = new Coin();
         SingleHandedWeapon bron2 = new SingleHandedWeapon();

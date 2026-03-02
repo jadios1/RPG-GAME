@@ -3,6 +3,7 @@ namespace RPG_Game;
 public class Wall : Field
 {
     public Wall(){}
+    
     public override bool IsEmpty()
     {
         return false;

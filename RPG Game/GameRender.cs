@@ -2,32 +2,41 @@ namespace RPG_Game;
 
 public class GameRender
 {
-    public void DrawMap(Map map,int Xsize,int Ysize,Player player)
+    public void Info(int width,Player player)
     {
-        
-        for (int i = 0; i < Xsize; i++)
+        Console.SetCursorPosition(width, 0);
+        Console.WriteLine("Inventory:");
+        for (int i = 0; i < 3; i++)
         {
-            for (int j = 0; j < Ysize; j++)
+            Console.SetCursorPosition(width, i+1);
+            if (player.Inventory.Count() > i)
             {
-                if (player.X == i && player.Y == j)
+                Console.WriteLine(" - " + player.Inventory[i]);
+            }
+            else
+            {
+                Console.WriteLine(" - ");
+            }
+        }
+    }
+    public void DrawMap(Map map,int height,int width,Player player)
+    {
+        Console.SetCursorPosition(0, 0);
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (player.X == x && player.Y == y)
                 {
                     Console.Write(player.GetSymbol());
                 }
                 else
                 {
-                    Console.Write(map.GetField(i, j).GetSymbol());
+                    Console.Write(map.GetField(x, y).GetSymbol());
                 }
             }
-
-
             Console.WriteLine();
-
         }
-        Console.WriteLine("inventory");
-        for (int i = 0; i < player.Inventory.Count; i++)
-        {
-            Console.WriteLine(player.Inventory[i]);
-        }
-        Console.WriteLine(player.X + " " + player.Y);
     }
 }

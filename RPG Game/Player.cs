@@ -4,8 +4,8 @@ public class Player : IDisplayable
 {
     public Player()
     {
-        X = 0;
-        Y = 1;
+        X = 3;
+        Y = 3;
         Strength = 0;
         Dexterity = 0;
         Luck = 0;
@@ -16,7 +16,7 @@ public class Player : IDisplayable
         Health = 100;
         LeftHand = null;
         RightHand = null;
-        Inventory = new List<Item>(5);
+        Inventory = new List<Item>(3);
     }
 
     public List<Item> Inventory { get; }

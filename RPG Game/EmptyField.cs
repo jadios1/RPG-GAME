@@ -2,7 +2,7 @@ namespace RPG_Game;
 
 public class EmptyField : Field
 {
-    public List<Item>? Items;
+    public List<Item> Items;
 
     public EmptyField()
     {
