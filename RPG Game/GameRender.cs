@@ -14,39 +14,39 @@ public class GameRender
                 Console.Write(" - " + player.Inventory[i].GetName());
                 if (player.SelectedSlot == i)
                 {
-                    Console.Write(" >".PadRight(30));
+                    Console.Write(" >".PadRight(35));
                 }
                 else
                 {
-                    Console.Write("".PadRight(30));
+                    Console.Write("".PadRight(35));
                 }
             }
             else
             {
-                Console.Write(" - ".PadRight(30));
+                Console.Write(" - ".PadRight(35));
             }
         }
         Console.SetCursorPosition(width+1, 5);
         if (map.GetField(player.X,player.Y).IsEmpty()==false)
         {
-            Console.WriteLine("Currently standing on:" + map.GetField(player.X,player.Y).GetItem().Description().PadRight(30));
+            Console.WriteLine("Currently standing on:" + map.GetField(player.X,player.Y).GetItem().Description().PadRight(35));
         }
         else
         {
-            Console.WriteLine("Currently standing on:".PadRight(30));
+            Console.WriteLine("Currently standing on:".PadRight(55));
         }
         
         Console.SetCursorPosition(width+1, 7);
         Console.Write("Left hand: ");
         
-        if(!player.LeftHand.IsEmpty()) Console.Write(player.LeftHand.HeldItem?.GetName().PadRight(30));
-        else Console.Write("".PadRight(30));
+        if(!player.LeftHand.IsEmpty()) Console.Write(player.LeftHand.HeldItem?.GetName().PadRight(35));
+        else Console.Write("".PadRight(35));
         
         Console.SetCursorPosition(width+1, 8);
         Console.Write("Right hand: ");
         
-        if(!player.RightHand.IsEmpty())Console.Write(player.RightHand.HeldItem?.GetName().PadRight(30));
-        else Console.Write("".PadRight(30));
+        if(!player.RightHand.IsEmpty())Console.Write(player.RightHand.HeldItem?.GetName().PadRight(35));
+        else Console.Write("".PadRight(35));
 
         Console.SetCursorPosition(width+1, 10);
         Console.WriteLine("Player stats:");
