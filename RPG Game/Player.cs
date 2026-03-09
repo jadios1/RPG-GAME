@@ -4,8 +4,8 @@ public class Player : IDisplayable
 {
     public Player()
     {
-        X = 3;
-        Y = 3;
+        X = 2;
+        Y = 2;
         Strength = 0;
         Dexterity = 0;
         Luck = 0;
