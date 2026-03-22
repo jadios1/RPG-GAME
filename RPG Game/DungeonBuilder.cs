@@ -9,7 +9,7 @@ public class DungeonBuilder
         map = map_;
     }
     
-    public DungeonBuilder GenerateEmpty()
+    public void GenerateEmpty()
     {
         for (int y = 0; y < map.Height; y++)
         {
@@ -24,11 +24,10 @@ public class DungeonBuilder
             }
         }
 
-        return this;
     }
     
 
-    public DungeonBuilder GenerateCentralRoom(int size)
+    public void GenerateCentralRoom(int size)
     {
         int roomHeight = size;
         int roomWidht = roomHeight*2;
@@ -40,7 +39,6 @@ public class DungeonBuilder
             }
         }
 
-        return this;
     }
     
     public DungeonBuilder GenerateFilled()
@@ -57,7 +55,7 @@ public class DungeonBuilder
     }
 
 
-    public DungeonBuilder GeneratePath(int length)
+    public void GeneratePath(int length)
     {
         Random rnd = new Random();
         int randomx = rnd.Next(1,map.Width-1); 
@@ -68,65 +66,38 @@ public class DungeonBuilder
         int direction = 0;
         while (takensteps < length)
         {
-            direction = rnd.Next(4);
-            
             if (length - takensteps <= 1) break;
             steps = rnd.Next(1,(length - takensteps) + 1);
-            
+            int dx = 0, dy = 0;
+            while (true)
+            {
+                direction = rnd.Next(4);
+                dx = direction == 0 ? 1 : direction == 1 ? -1 : 0;
+                dy = direction == 2 ? 1 : direction == 3 ? -1 : 0;
+                int newx = randomx + dx;
+                int newy = randomy + dy;
+                if (newx >= 1 && newx <= map.Width-2 && newy >= 1 && newy <= map.Height-2)
+                    break;
+            }
             for (int i = 0; i < steps; i++)
             {
+                if (randomx + dx < 1 || randomx + dx > map.Width-2 || randomy + dy < 1 || randomy + dy > map.Height-2) break;
                 if (direction == 0)
                 {
-                    if (randomx >= map.Width-2 || randomx <= 1)
-                    {
-                        takensteps++;
-                        break;
-
-                    }
-                    else
-                    {
-                        randomx++;    
-                    }
-                    
+                        randomx++;       
                 }
                 else if (direction == 1)
                 {
-                    if (randomx >= map.Width-2 || randomx <= 1)
-                    {
-                        takensteps++;
-                        break;
-
-                    }
-                    else
-                    {
                         randomx--;
-                    }
                 }
                 else if(direction == 2)
                 {
-                    if (randomy >= map.Height-2 || randomy <= 1)
-                    {
-                        takensteps++;
-                        break;
-
-                    }
-                    else
-                    {
-                        randomy++;
-                    }
-                    
+                    randomy++;
                 }
                 else if (direction == 3)
                 {
-                    if (randomy >= map.Height-2 || randomy <= 1)
-                    {
-                        takensteps++;
-                        break;
-                    }
-                    else
-                    {
-                        randomy--;
-                    }
+                    randomy--;
+                    
                 }
 
                 takensteps++;
@@ -136,6 +107,5 @@ public class DungeonBuilder
 
         }
 
-        return this;
     }
 }

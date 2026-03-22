@@ -11,13 +11,11 @@ public class Map
         
 
         builder.GenerateFilled();
-        builder.GeneratePath(100);
+        builder.GeneratePath(20);
+
         builder.GenerateCentralRoom(6);
  
 
-        
-            
-        PlaceWeaponRandom();
         SetField(player.X,player.Y,new EmptyField());
 
     }
