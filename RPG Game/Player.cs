@@ -114,7 +114,7 @@ public class Player : IDisplayable
         var itemToDrop = this.SelectedItem();
         if (itemToDrop != null)
         { 
-            _map.GetField(this.X, this.Y).PutItem(itemToDrop);
+            _map.GetField(X, Y).PutItem(itemToDrop);
             this.RemoveFromInventory(this.SelectedSlot);
         }
     }
@@ -152,7 +152,15 @@ public class Player : IDisplayable
         }
 
     }
-    
+
+    public void PickUpItem(Map map)
+    {
+        if (!map.GetField(X, Y).IsEmpty())
+        {
+            PutIntoInventory(map.GetField(X, Y).GetItem(), map.GetField(X, Y));    
+        }
+        
+    }
     
     
     public char GetSymbol()

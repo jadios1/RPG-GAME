@@ -12,6 +12,6 @@ public abstract class Weapon : Item
 
     public override string Description()
     {
-        return GetName() + " Damage: " + Damage;
+        return " Damage: " + Damage;
     }
 }

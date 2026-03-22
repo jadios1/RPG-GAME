@@ -2,42 +2,35 @@ namespace RPG_Game;
 
 public class Map
 {
-    public Map(int height,int width)
+    public Map(int height,int width,Player player)
     {
         Height = height;
         Width = width;
         _fields = new Field[width, height];
+        DungeonBuilder builder = new DungeonBuilder(this);
+        
 
-        for (int y = 0; y < Height; y++)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                _fields[x, y] = new EmptyField();
-                if (y == 0 || x == 0 || y == Height-1 || x == Width-1)
-                {
-                    PlaceWall(x,y);
-                }
-
-                if (y == 10 && x != 3)
-                {
-                    PlaceWall(x,y);
-                }
-            }
-        }
+        builder.GenerateFilled();
+        builder.GeneratePath(100);
+        builder.GenerateCentralRoom(6);
+ 
 
         
-        PlaceItem(11,12,new Coin());
-        PlaceItem(10,12,new SingleHandedWeapon());
-        PlaceItem(14,14,new DoubleHandedWeapon(12));
-        PlaceItem(20,5,new Axe());
-        PlaceItem(10,18,new Junk());
-        PlaceItem(18, 16, new Gold());
-        PlaceItem(19,2,new Clock());
+            
+        PlaceWeaponRandom();
+        SetField(player.X,player.Y,new EmptyField());
+
     }
+
+
+
+
+    
     
     private Field[,] _fields;
     public int Height { get; private set; }
     public int Width { get; private set; }
+
 
     public void TryMovePlayer(Player player,int dx,int dy)
     {
@@ -55,7 +48,12 @@ public class Map
         return _fields[x, y];
     }
 
-    private void PlaceWall(int x,int y)
+    public void SetField(int x, int y,Field field)
+    {
+        _fields[x, y] = field;
+    }
+
+    public void PlaceWall(int x,int y)
     {
         _fields[x, y] = new Wall();
     }
@@ -63,5 +61,38 @@ public class Map
     private void PlaceItem(int x, int y, Item item)
     {
         _fields[x,y].PutItem(item);
+    }
+    
+    
+    public void PlaceItemRandom()
+    {
+        Random rnd = new Random();
+        List<Item> items = new List<Item>{ new Coin(), new Junk(), new Clock(), new Book(), new Gold() };
+        Item randomItem = items[rnd.Next(5)];
+        int x = rnd.Next(Width);
+        int y = rnd.Next(Height);
+        while (!GetField(x, y).IsEmpty())
+        {
+            x = rnd.Next(Width);
+            y = rnd.Next(Height);
+        }
+        _fields[x,y].PutItem(randomItem);
+        
+    }
+    
+    public void PlaceWeaponRandom()
+    {
+        Random rnd = new Random();
+        List<Weapon> weapons = new List<Weapon>{ new DoubleHandedWeapon(), new Axe(), new SingleHandedWeapon() };
+        Item randomItem = weapons[rnd.Next(3)];
+        int x = rnd.Next(Width);
+        int y = rnd.Next(Height);
+        while (!GetField(x, y).IsEmpty())
+        {
+            x = rnd.Next(Width);
+            y = rnd.Next(Height);
+        }
+        _fields[x,y].PutItem(randomItem);
+        
     }
 }

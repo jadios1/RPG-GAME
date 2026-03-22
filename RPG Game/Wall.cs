@@ -5,7 +5,7 @@ public class Wall : Field
     
     public override bool IsEmpty()
     {
-        throw new NotImplementedException();
+        return false;
     }
 
     public override bool IsPassable()

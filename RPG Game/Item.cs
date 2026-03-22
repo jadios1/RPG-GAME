@@ -21,6 +21,6 @@ public abstract class Item : IDisplayable
 
     public virtual string Description()
     {
-        return GetName();
+        return "";
     }
 }
