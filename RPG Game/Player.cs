@@ -108,8 +108,59 @@ public class Player : IDisplayable
         return null;
     }
     
+    
+    public void DropItem(Map _map)
+    {
+        var itemToDrop = this.SelectedItem();
+        if (itemToDrop != null)
+        { 
+            _map.GetField(this.X, this.Y).PutItem(itemToDrop);
+            this.RemoveFromInventory(this.SelectedSlot);
+        }
+    }
+
+    public void LeftHandPickup()
+    {
+        if (LeftHand.IsEmpty())
+        {
+            var item = this.SelectedItem();
+            if (item != null)
+            {
+                item.TryEquip(this,LeftHand);
+            }
+        }
+        else
+        {
+            LeftHand.HeldItem?.TryRemove(this,LeftHand);
+        }
+
+    }
+
+    public void RightHandPickup()
+    {
+        if (RightHand.IsEmpty())
+        {
+            var item = SelectedItem();
+            if (item != null)
+            {
+                item.TryEquip(this,RightHand);
+            }
+        }
+        else
+        {
+            RightHand.HeldItem?.TryRemove(this,RightHand);
+        }
+
+    }
+    
+    
+    
     public char GetSymbol()
     {
         return '¶';
     }
+    
+    
+    
+    
 }

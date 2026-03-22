@@ -6,6 +6,45 @@ public class Game
     private Player _player;
     private GameRender _gameRender;
 
+    private Dictionary<ConsoleKey, Action> _keyActions;
+    
+    public Game()
+    {
+        _map = new Map(20,40);
+        _player = new Player();
+        _gameRender = new GameRender();
+
+        if (_player != null)
+            _keyActions = new Dictionary<ConsoleKey, Action>
+            {
+                { ConsoleKey.W,() => _map.TryMovePlayer(_player, 0, -1) },
+                { ConsoleKey.A,() => _map.TryMovePlayer(_player, -1, 0) },
+                { ConsoleKey.S,() => _map.TryMovePlayer(_player, 0, 1) },
+                { ConsoleKey.D,() => _map.TryMovePlayer(_player, 1, 0) },
+                {
+                    ConsoleKey.E,() => _player.PutIntoInventory(_map.GetField(_player.X, _player.Y).GetItem(), _map.GetField(_player.X, _player.Y))
+                },
+                { ConsoleKey.R,() => _player.DropItem(_map) },
+                { ConsoleKey.Z,() => _player.LeftHandPickup() },
+                { ConsoleKey.X,() => _player.RightHandPickup() },
+                { ConsoleKey.D1,() => _player.SelectedSlot = 0 },
+                { ConsoleKey.D2,() => _player.SelectedSlot = 1 },
+                { ConsoleKey.D3,() => _player.SelectedSlot = 2 },
+                
+
+                
+                
+            };
+
+        Console.CursorVisible = false;
+        Console.Clear();
+        
+        
+        
+    }
+
+
+    
     public void Run()
     {
         while (true)
@@ -15,7 +54,13 @@ public class Game
             var pressedkey = Console.ReadKey(true).Key;
             var currentfield = _map.GetField(_player.X, _player.Y);
             
+
+            if (_keyActions.TryGetValue(pressedkey, out var action))
+            {
+                action();
+            }
             
+            /*
             if (pressedkey == ConsoleKey.W)
             {
                 _map.TryMovePlayer(_player,0,-1);
@@ -42,7 +87,6 @@ public class Game
                 else
                 {
                     var itemToDrop = _player.SelectedItem();
-                    
                     if (itemToDrop != null)
                     {
                         currentfield.PutItem(itemToDrop);
@@ -97,15 +141,11 @@ public class Game
             {
                 _player.SelectedSlot = 2;
             }
+        */
         }
+        
+        
     }
 
-    public Game()
-    {
-        _map = new Map(20,40);
-        _player = new Player();
-        _gameRender = new GameRender();
-        Console.CursorVisible = false;
-        Console.Clear();
-    }
+
 }
