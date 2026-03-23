@@ -10,11 +10,14 @@ public class Map
         DungeonBuilder builder = new DungeonBuilder(this);
         
 
-        builder.GenerateFilled();
-        builder.GeneratePath(20);
-
-        builder.GenerateCentralRoom(6);
- 
+        builder.GenerateEmpty();
+        PlaceItemRandom();
+        PlaceItemRandom();
+        PlaceItemRandom();
+        PlaceItemRandom();
+        PlaceWeaponRandom();
+        PlaceWeaponRandom();
+        PlaceWeaponRandom();
 
         SetField(player.X,player.Y,new EmptyField());
 
@@ -30,13 +33,16 @@ public class Map
     public int Width { get; private set; }
 
 
-    public void TryMovePlayer(Player player,int dx,int dy)
+    public bool TryMovePlayer(Player player,int dx,int dy)
     {
         if (_fields[player.X + dx, player.Y + dy].IsPassable())
         {
             player.Move(dx,dy);
+            return true;
         }
- 
+
+        return false;
+
     }
 
     

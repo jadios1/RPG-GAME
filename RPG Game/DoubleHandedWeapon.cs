@@ -27,6 +27,9 @@ public class DoubleHandedWeapon : Weapon
         player.RemoveDoubleHanded(hand);
     }
 
-
+    public override bool IsEquipable()
+    {
+        return true;
+    }
 
 }

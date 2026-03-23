@@ -1,3 +1,5 @@
+using System.Diagnostics.Contracts;
+
 namespace RPG_Game;
 
 public class Game
@@ -6,7 +8,7 @@ public class Game
     private Player _player;
     private GameRender _gameRender;
 
-    private Dictionary<ConsoleKey, Action> _keyActions;
+    private Dictionary<ConsoleKey, Func<bool>> _keyActions;
     
     public Game()
     {
@@ -15,7 +17,7 @@ public class Game
 
         _gameRender = new GameRender();
 
-        _keyActions = new Dictionary<ConsoleKey, Action>
+        _keyActions = new Dictionary<ConsoleKey, Func<bool>>
         {
             { ConsoleKey.W,() => _map.TryMovePlayer(_player, 0, -1) },
             { ConsoleKey.A,() => _map.TryMovePlayer(_player, -1, 0) },
@@ -27,9 +29,24 @@ public class Game
             { ConsoleKey.R,() => _player.DropItem(_map) },
             { ConsoleKey.Z,() => _player.LeftHandPickup() },
             { ConsoleKey.X,() => _player.RightHandPickup() },
-            { ConsoleKey.D1,() => _player.SelectedSlot = 0 },
-            { ConsoleKey.D2,() => _player.SelectedSlot = 1 },
-            { ConsoleKey.D3,() => _player.SelectedSlot = 2 },
+            { ConsoleKey.D1, () =>
+                {
+                    _player.SelectedSlot = 0; 
+                    return true;   
+                }
+                 },
+            { ConsoleKey.D2,() =>
+                {
+                    _player.SelectedSlot = 1;
+                    return true;
+                }
+            },
+            { ConsoleKey.D3,() =>
+                {
+                    _player.SelectedSlot = 2;
+                    return true;
+                }
+            },
         };
 
         Console.CursorVisible = false;
@@ -46,11 +63,23 @@ public class Game
         {
             _gameRender.DrawMap(_map,_map.Height,_map.Width,_player);
             _gameRender.Info(_map.Width,_player,_map);
+
             var pressedkey = Console.ReadKey(true).Key;
             
             if (_keyActions.TryGetValue(pressedkey, out var action))
             {
-                action();
+                if (action() == false)
+                {
+                    _gameRender.CannotUse(_map,true);
+                }
+                else
+                {
+                    _gameRender.CannotUse(_map,false);
+                }
+            }
+            else
+            {
+                _gameRender.CannotUse(_map,true);
             }
             
         }

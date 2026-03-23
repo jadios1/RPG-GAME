@@ -36,6 +36,7 @@ public class Player : IDisplayable
     public Hand LeftHand;
     public Hand RightHand;
 
+
     public void Move(int dx, int dy)
     {
         X += dx;
@@ -96,6 +97,7 @@ public class Player : IDisplayable
             if (hand.HeldItem != null) Inventory.Add(hand.HeldItem);
             hand.Clear();
         }
+        
     }
 
     public Item? SelectedItem()
@@ -109,17 +111,20 @@ public class Player : IDisplayable
     }
     
     
-    public void DropItem(Map _map)
+    public bool DropItem(Map _map)
     {
         var itemToDrop = this.SelectedItem();
         if (itemToDrop != null)
         { 
             _map.GetField(X, Y).PutItem(itemToDrop);
             this.RemoveFromInventory(this.SelectedSlot);
+            return true;
         }
+
+        return false;
     }
 
-    public void LeftHandPickup()
+    public bool LeftHandPickup()
     {
         if (LeftHand.IsEmpty())
         {
@@ -127,16 +132,20 @@ public class Player : IDisplayable
             if (item != null)
             {
                 item.TryEquip(this,LeftHand);
+                return true;
             }
         }
         else
         {
             LeftHand.HeldItem?.TryRemove(this,LeftHand);
+            return true;
         }
+
+        return false;
 
     }
 
-    public void RightHandPickup()
+    public bool RightHandPickup()
     {
         if (RightHand.IsEmpty())
         {
@@ -144,22 +153,30 @@ public class Player : IDisplayable
             if (item != null)
             {
                 item.TryEquip(this,RightHand);
+                return true;
             }
         }
         else
         {
             RightHand.HeldItem?.TryRemove(this,RightHand);
+            return true;
         }
+
+        return false;
 
     }
 
-    public void PickUpItem(Map map)
+    public bool PickUpItem(Map map)
     {
         if (!map.GetField(X, Y).IsEmpty())
         {
-            PutIntoInventory(map.GetField(X, Y).GetItem(), map.GetField(X, Y));    
+            PutIntoInventory(map.GetField(X, Y).GetItem(), map.GetField(X, Y));
+            return true;
         }
-        
+
+        return false;
+
+
     }
     
     

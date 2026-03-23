@@ -25,4 +25,8 @@ public class Axe : Weapon
     {
         player.RemoveSingleHanded(hand);
     }
+    public override bool IsEquipable()
+    {
+        return true;
+    }
 }

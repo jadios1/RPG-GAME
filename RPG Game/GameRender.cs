@@ -4,6 +4,7 @@ public class GameRender
 {
     public void Info(int width,Player player,Map map)
     {
+        Console.ResetColor();
         Console.SetCursorPosition(width+1, 0);
         Console.WriteLine("Inventory:");
         for (int i = 0; i < 3; i++)
@@ -89,10 +90,85 @@ public class GameRender
         
         Console.SetCursorPosition(width+1, 21);
         Console.WriteLine("Wisdom: " + player.Wisdom);
+        Console.SetCursorPosition(0, map.Height+1);
 
-
-
+        Console.WriteLine("W/A/S/D - move");
+        if (!map.GetField(player.X, player.Y).IsEmpty())
+        {
+            Console.WriteLine("E - pick up");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("E - pick up");
+            Console.ResetColor();
+        }
         
+
+        if (player.SelectedItem() !=null)
+        {
+            Console.WriteLine("R - drop");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            Console.WriteLine("R - drop");
+            Console.ResetColor();
+        }
+
+        if (player.SelectedItem()!=null && player.SelectedItem()!.IsEquipable())
+        {
+            Console.WriteLine("Z - equip left");
+
+        }
+        else if (!player.LeftHand.IsEmpty())
+        {
+            Console.WriteLine("Z - equip left");
+
+        }
+        else
+        {            
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("Z - equip left");
+            Console.ResetColor();
+
+        }
+
+        if (player.SelectedItem()!=null && player.SelectedItem()!.IsEquipable())
+        {
+            Console.WriteLine("X - equip right");
+
+        }
+        else if (!player.RightHand.IsEmpty())
+        {
+            Console.WriteLine("X - equip right");
+
+        }
+        else
+        {            
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("X - equip right");
+            Console.ResetColor();
+        }
+        Console.WriteLine("1/2/3 - select slot");
+    }
+    
+    
+    public void CannotUse(Map map,bool work)
+    {
+        if (work == true)
+        {
+            Console.SetCursorPosition(0, map.Height);
+            Console.WriteLine("Cannot use that key!");   
+
+        }
+        else
+        {
+            Console.SetCursorPosition(0, map.Height);
+            Console.WriteLine("".PadRight(25));   
+
+        }
     }
     public void DrawMap(Map map,int height,int width,Player player)
     {

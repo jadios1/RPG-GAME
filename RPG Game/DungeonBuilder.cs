@@ -54,6 +54,28 @@ public class DungeonBuilder
         return this;
     }
 
+    public void GenerateChamber(int size)
+    {
+        Random random = new Random();
+        int sizeX = size * 2;
+        int sizeY = size;
+        int cordsX = random.Next(1, map.Width - sizeX);
+        int cordsY = random.Next(1, map.Height - sizeY);
+        
+        
+        for (int y = cordsY; y < cordsY+sizeY; y++)
+        {
+            for (int x = cordsX; x < cordsX+sizeX; x++)
+            {
+                map.SetField(x,y,new EmptyField());
+            }
+        }
+        
+        
+        
+        
+        
+    }
 
     public void GeneratePath(int length)
     {
@@ -61,7 +83,7 @@ public class DungeonBuilder
         int randomx = rnd.Next(1,map.Width-1); 
         int randomy = rnd.Next(1,map.Height-1);
 
-        int steps = rnd.Next(1,(length/2));
+        int steps;
         int takensteps = 0;
         int direction = 0;
         while (takensteps < length)

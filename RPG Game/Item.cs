@@ -7,8 +7,8 @@ public abstract class Item : IDisplayable
     public abstract string GetName();
 
     public virtual void TryEquip(Player player,Hand hand) { }
-    
-    public virtual void TryRemove(Player player,Hand hand) { }
+
+    public virtual void TryRemove(Player player, Hand hand) { }
 
     public virtual void OnPickup(Player player,Field field)
     {
@@ -17,6 +17,11 @@ public abstract class Item : IDisplayable
             field.RemoveItem();
             player.Inventory.Add(this);
         }
+    }
+
+    public virtual bool IsEquipable()
+    {
+        return false;
     }
 
     public virtual string Description()
