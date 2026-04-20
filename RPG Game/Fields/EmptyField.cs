@@ -1,12 +1,12 @@
-namespace RPG_Game;
+namespace RPG_Game.Fields;
 
 public class EmptyField : Field
 {
-    public List<Item> Items;
+    public List<Item?> Items;
     public Enemy? enemy;
     public EmptyField()
     {
-        Items = new List<Item>();
+        Items = new List<Item?>();
     }
     
 
@@ -25,15 +25,15 @@ public class EmptyField : Field
         return ' ';
     }
     
-    public override Item RemoveItem()
+    public override Item? RemoveItem()
     {
-        Item temp = Items[0];
+        Item? temp = Items[0];
         Items.RemoveAt(0);
         return temp;
         
     }
 
-    public override Item GetItem()
+    public override Item? GetItem()
     {
         return Items[0];
     }
@@ -51,7 +51,7 @@ public class EmptyField : Field
     
     
 
-    public override void PutItem(Item item)
+    public override void PutItem(Item? item)
     {
         Items.Add(item);
     }

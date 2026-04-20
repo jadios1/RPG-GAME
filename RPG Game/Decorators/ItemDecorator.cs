@@ -1,3 +1,5 @@
+using RPG_Game.Fields;
+
 namespace RPG_Game.Decorators;
 
 public abstract class ItemDecorator : Item

@@ -1,4 +1,5 @@
 using System.Diagnostics.Contracts;
+using RPG_Game.Fields;
 using RPG_Game.Visitors;
 
 namespace RPG_Game;
@@ -123,7 +124,8 @@ public class Game
             enemy.Health -= damageToEnemy;
             _player.Health -= damageToPlayer;
         }
-    
+        Console.Clear();
+
         if (enemy.Health <= 0) enemyField.SetEnemy(null);
         if (_player.Health <= 0)
         {

@@ -1,3 +1,5 @@
+using RPG_Game.Fields;
+
 namespace RPG_Game;
 
 public class Player : IDisplayable
@@ -43,7 +45,7 @@ public class Player : IDisplayable
         Y += dy;
     }
 
-    public void PutIntoInventory(Item item,Field field)
+    public void PutIntoInventory(Item? item,Field field)
     {
 
         item.OnPickup(this,field);

@@ -1,4 +1,5 @@
 using RPG_Game.Decorators;
+using RPG_Game.Fields;
 using RPG_Game.Items.Weapon;
 
 namespace RPG_Game;
@@ -11,11 +12,13 @@ public class Map
         Width = width;
         _fields = new Field[width, height];
         DungeonBuilder builder = new DungeonBuilder(this);
-        
 
-        builder.GenerateEmpty();
+        builder.GenerateFilled();
         builder.GenerateChamber(5);
-
+        builder.GeneratePath(50);
+        builder.GeneratePath(50);
+        builder.GeneratePath(50);
+        builder.GeneratePath(50);
         builder.GenerateChamber(5);
         builder.GenerateCentralRoom(5); 
         builder.PlaceItemRandom();

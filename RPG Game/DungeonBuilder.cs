@@ -1,3 +1,4 @@
+using RPG_Game.Fields;
 using RPG_Game.Items.Weapon;
 
 namespace RPG_Game;
@@ -133,8 +134,8 @@ public class DungeonBuilder
     public void PlaceItemRandom()
     {
         Random rnd = new Random();
-        List<Item> items = new List<Item>{new Coin(), new Junk(), new Clock(), new Book(), new Gold() };
-        Item randomItem = items[rnd.Next(5)];
+        List<Item?> items = new List<Item?> {new Coin(), new Junk(), new Clock(), new Book(), new Gold() };
+        Item? randomItem = items[rnd.Next(5)];
         
         int x = rnd.Next(map.Width);
         int y = rnd.Next(map.Height);
@@ -151,8 +152,8 @@ public class DungeonBuilder
     public void PlaceWeaponRandom()
     {
         Random rnd = new Random();
-        List<Weapon> weapons = new List<Weapon>{ new DoubleHandedWeapon(), new Axe(), new SingleHandedWeapon() };
-        Item randomItem = weapons[rnd.Next(3)];
+        List<Weapon?> weapons = new List<Weapon?> { new DoubleHandedWeapon(), new Axe(), new SingleHandedWeapon() };
+        Item? randomItem = weapons[rnd.Next(3)];
         int x = rnd.Next(map.Width);
         int y = rnd.Next(map.Height);
         while (!map.GetField(x, y).IsEmpty())
@@ -182,7 +183,7 @@ public class DungeonBuilder
         map.SetField(x, y, new Wall());
     }
 
-    public void PlaceItem(int x, int y, Item item)
+    public void PlaceItem(int x, int y, Item? item)
     {
         map.GetField(x,y).PutItem(item);
     }

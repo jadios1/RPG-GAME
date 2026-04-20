@@ -221,6 +221,7 @@ public class GameRender
         Console.WriteLine("2 - Stealth attack".PadRight(40));
         Console.SetCursorPosition(width+1, 9);
         Console.WriteLine("3 - Magical attack".PadRight(40));
+
     }
 
     public void DrawGameOver()

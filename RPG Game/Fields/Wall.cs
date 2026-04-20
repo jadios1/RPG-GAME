@@ -1,4 +1,4 @@
-namespace RPG_Game;
+namespace RPG_Game.Fields;
 
 public class Wall : Field
 {
@@ -18,18 +18,15 @@ public class Wall : Field
         return '█';
     }
 
-    public override Item RemoveItem()
+    public override Item? RemoveItem()
     {
-        throw new NotImplementedException();
+        return null;
     }
 
-    public override Item GetItem()
+    public override Item? GetItem()
     {
-        throw new NotImplementedException();
+        return null;
     }
 
-    public override void PutItem(Item item)
-    {
-        throw new NotImplementedException();
-    }
+    public override void PutItem(Item? item) { }
 }
