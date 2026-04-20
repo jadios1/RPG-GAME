@@ -61,7 +61,6 @@ public class Player : IDisplayable
     
     public void EquipSingleHanded(Item item,Hand hand)
     {
-        Console.WriteLine($"EquipSingleHanded: item={item.GetName()}, hand.IsEmpty={hand.IsEmpty()}, inventory count={Inventory.Count}, contains item={Inventory.Contains(item)}");
         if (hand.IsEmpty())
         {
             hand.Hold(item);
@@ -127,7 +126,6 @@ public class Player : IDisplayable
 
     public bool LeftHandPickup()
     {
-        Console.WriteLine($"TryRemove on: {LeftHand.HeldItem?.GetName()}");
         if (LeftHand.IsEmpty())
         {
             var item = this.SelectedItem();
@@ -179,13 +177,9 @@ public class Player : IDisplayable
         return false;
 
 
-    }
-
+    } 
     public int CalculateAttackDamage(IAttackVisitor visitor)
     {
-        Console.SetCursorPosition(0, 24);
-        Console.WriteLine($"Calc: L={LeftHand.HeldItem?.GetType().Name} R={RightHand.HeldItem?.GetType().Name}".PadRight(50));
-
         int left = LeftHand.HeldItem?.AcceptAttack(visitor, this) ?? 0;
         int right = RightHand.HeldItem?.AcceptAttack(visitor, this) ?? 0;
         return left + right;

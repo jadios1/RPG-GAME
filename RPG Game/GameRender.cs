@@ -73,7 +73,7 @@ public class GameRender
         Console.WriteLine("Coins: " + player.Coins);
         
         Console.SetCursorPosition(width+1, 16);
-        Console.WriteLine("Health: " + player.Health);
+        Console.WriteLine("Health: " + player.Health + "".PadRight(5));
         
         Console.SetCursorPosition(width+1, 17);
         Console.WriteLine("Dexterity: " + player.Dexterity);

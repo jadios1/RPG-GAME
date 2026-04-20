@@ -11,9 +11,6 @@ public class NormalAttackVisitor : IAttackVisitor
 
     public int VisitLight(LightWeapon weapon, Player player)
     {
-        Console.SetCursorPosition(0, 22);
-        Console.WriteLine($"VisitLight called, damage={weapon.Damage}".PadRight(50));
-
         return weapon.Damage + player.Dexterity + player.Luck;
     }
 

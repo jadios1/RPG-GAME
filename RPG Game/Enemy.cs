@@ -13,8 +13,8 @@ public class Enemy : IDisplayable
     {
         Name = name;
         Health = health;
-        attack = attack;
-        armor = armor;
+        Attack = attack;
+        Armor = armor;
     }
     
     public char GetSymbol()

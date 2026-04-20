@@ -3,9 +3,8 @@ namespace RPG_Game.Items.Weapon;
 public abstract class Weapon : Item
 {
  
-    public abstract int AcceptAttack(IAttackVisitor visitor, Player player);
-    public abstract int AcceptDefense(IDefenseVisitor visitor, Player player);
-    
+    public abstract override int AcceptAttack(IAttackVisitor visitor, Player player);
+    public abstract override int AcceptDefense(IDefenseVisitor visitor, Player player);    
     public abstract override void TryEquip(Player player, Hand hand);
 
     public override void TryEquipAsDecorated(Player player, Hand hand, Item decorated)

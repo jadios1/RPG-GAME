@@ -103,6 +103,7 @@ public class Game
     private void StartCombat(Enemy enemy, Field enemyField)
     {
         
+        
         while (enemy.Health > 0 && _player.Health > 0)
         {
             _gameRender.DrawCombat(_player, enemy,_map.Width);
@@ -121,10 +122,6 @@ public class Game
         
             enemy.Health -= damageToEnemy;
             _player.Health -= damageToPlayer;
-            Console.SetCursorPosition(_map.Width+1, 12);
-            Console.WriteLine($"L:{_player.LeftHand.HeldItem?.GetName() ?? "empty"} R:{_player.RightHand.HeldItem?.GetName() ?? "empty"}".PadRight(40));
-            Console.SetCursorPosition(_map.Width+1, 13);
-            Console.WriteLine($"DMG:{playerDamage} DEF:{playerDefense}".PadRight(40));
         }
     
         if (enemy.Health <= 0) enemyField.SetEnemy(null);

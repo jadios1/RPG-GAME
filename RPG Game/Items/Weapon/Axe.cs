@@ -16,15 +16,7 @@ public class Axe : HeavyWeapon
         return "Axe";
     }
 
-    public override int AcceptAttack(IAttackVisitor visitor, Player player)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override int AcceptDefense(IDefenseVisitor visitor, Player player)
-    {
-        throw new NotImplementedException();
-    }
+ 
 
     public override void TryEquip(Player player,Hand hand)
     {
