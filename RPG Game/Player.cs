@@ -61,6 +61,7 @@ public class Player : IDisplayable
     
     public void EquipSingleHanded(Item item,Hand hand)
     {
+        Console.WriteLine($"EquipSingleHanded: item={item.GetName()}, hand.IsEmpty={hand.IsEmpty()}, inventory count={Inventory.Count}, contains item={Inventory.Contains(item)}");
         if (hand.IsEmpty())
         {
             hand.Hold(item);
@@ -115,17 +116,18 @@ public class Player : IDisplayable
     {
         var itemToDrop = this.SelectedItem();
         if (itemToDrop != null)
-        { 
+        {
+            itemToDrop.OnDrop(this);
             _map.GetField(X, Y).PutItem(itemToDrop);
             this.RemoveFromInventory(this.SelectedSlot);
             return true;
         }
-
         return false;
     }
 
     public bool LeftHandPickup()
     {
+        Console.WriteLine($"TryRemove on: {LeftHand.HeldItem?.GetName()}");
         if (LeftHand.IsEmpty())
         {
             var item = this.SelectedItem();
@@ -178,7 +180,23 @@ public class Player : IDisplayable
 
 
     }
-    
+
+    public int CalculateAttackDamage(IAttackVisitor visitor)
+    {
+        Console.SetCursorPosition(0, 24);
+        Console.WriteLine($"Calc: L={LeftHand.HeldItem?.GetType().Name} R={RightHand.HeldItem?.GetType().Name}".PadRight(50));
+
+        int left = LeftHand.HeldItem?.AcceptAttack(visitor, this) ?? 0;
+        int right = RightHand.HeldItem?.AcceptAttack(visitor, this) ?? 0;
+        return left + right;
+    }
+
+    public int CalculateDefense(IDefenseVisitor visitor)
+    {
+        int left = LeftHand.HeldItem?.AcceptDefense(visitor, this) ?? 0;
+        int right = RightHand.HeldItem?.AcceptDefense(visitor, this) ?? 0;
+        return left + right;
+    }
     
     public char GetSymbol()
     {

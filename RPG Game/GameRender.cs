@@ -83,7 +83,7 @@ public class GameRender
 
         
         Console.SetCursorPosition(width+1, 19);
-        Console.WriteLine("Luck: " + player.Luck);
+        Console.WriteLine("Luck: " + player.Luck + "".PadRight(3));
         
         Console.SetCursorPosition(width+1, 20);
         Console.WriteLine("Strength: " + player.Strength);
@@ -151,6 +151,17 @@ public class GameRender
             Console.WriteLine("X - equip right");
             Console.ResetColor();
         }
+        var adjacentEnemy = map.GetAdjacentEnemy(player.X, player.Y);
+        if (adjacentEnemy != null)
+        {
+            Console.WriteLine("F - fight");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("F - fight");
+            Console.ResetColor();
+        }
         Console.WriteLine("1/2/3 - select slot");
     }
     
@@ -189,5 +200,36 @@ public class GameRender
             }
             Console.WriteLine();
         }
+    }
+    
+    
+    public void DrawCombat(Player player, Enemy enemy, int width)
+    {
+        Console.SetCursorPosition(width+1, 0);
+        Console.WriteLine("=== COMBAT ===".PadRight(40));
+        Console.SetCursorPosition(width+1, 1);
+        Console.WriteLine($"Enemy: {enemy.Name}".PadRight(40));
+        Console.SetCursorPosition(width+1, 2);
+        Console.WriteLine($"HP: {enemy.Health}  Armor: {enemy.Armor}".PadRight(40));
+        Console.SetCursorPosition(width+1, 3);
+        Console.WriteLine($"Attack: {enemy.Attack}".PadRight(40));
+        Console.SetCursorPosition(width+1, 5);
+        Console.WriteLine($"Your HP: {player.Health}".PadRight(40));
+        Console.SetCursorPosition(width+1, 7);
+        Console.WriteLine("1 - Normal attack".PadRight(40));
+        Console.SetCursorPosition(width+1, 8);
+        Console.WriteLine("2 - Stealth attack".PadRight(40));
+        Console.SetCursorPosition(width+1, 9);
+        Console.WriteLine("3 - Magical attack".PadRight(40));
+    }
+
+    public void DrawGameOver()
+    {
+        Console.Clear();
+        Console.SetCursorPosition(0, 0);
+        Console.WriteLine("GAME OVER");
+        Console.ReadKey(true);
+        Environment.Exit(0);
+
     }
 }

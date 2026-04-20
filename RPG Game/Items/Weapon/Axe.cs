@@ -1,22 +1,30 @@
-namespace RPG_Game;
+namespace RPG_Game.Items.Weapon;
 
-public class SingleHandedWeapon : Weapon
+public class Axe : HeavyWeapon
 {
-    public SingleHandedWeapon(int dmg = 50)
+    public Axe(int dmg = 20)
     {
         Damage = dmg;
     }
-    
     public override char GetSymbol()
     {
-        return 'p';
+        return 'A';
     }
 
     public override string GetName()
     {
-        return "Single Handed Weapon";
+        return "Axe";
     }
 
+    public override int AcceptAttack(IAttackVisitor visitor, Player player)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override int AcceptDefense(IDefenseVisitor visitor, Player player)
+    {
+        throw new NotImplementedException();
+    }
 
     public override void TryEquip(Player player,Hand hand)
     {
@@ -31,5 +39,4 @@ public class SingleHandedWeapon : Weapon
     {
         return true;
     }
-
 }

@@ -3,26 +3,28 @@ namespace RPG_Game;
 public class EmptyField : Field
 {
     public List<Item> Items;
-
+    public Enemy? enemy;
     public EmptyField()
     {
         Items = new List<Item>();
     }
     
-    public override bool IsPassable()
-    {
-        return true;
-    }
+
+    
+    public override bool IsPassable() => enemy == null;
+    public override Enemy? GetEnemy() => enemy;
+
+    public override void SetEnemy(Enemy? e) { enemy = e; }
+    
+    public override bool HasEnemy() => enemy != null;
     
     public override char GetSymbol()
     {
-        if (Items.Count > 0)
-        {
-            return Items[0].GetSymbol();
-        }
+        if (enemy != null) return enemy.GetSymbol();
+        if (Items.Count > 0) return Items[0].GetSymbol();
         return ' ';
     }
-
+    
     public override Item RemoveItem()
     {
         Item temp = Items[0];

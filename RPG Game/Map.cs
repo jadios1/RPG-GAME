@@ -1,3 +1,6 @@
+using RPG_Game.Decorators;
+using RPG_Game.Items.Weapon;
+
 namespace RPG_Game;
 
 public class Map
@@ -11,16 +14,23 @@ public class Map
         
 
         builder.GenerateEmpty();
-        PlaceItemRandom();
-        PlaceItemRandom();
-        PlaceItemRandom();
-        PlaceItemRandom();
-        PlaceWeaponRandom();
-        PlaceWeaponRandom();
-        PlaceWeaponRandom();
+        builder.GenerateChamber(5);
+
+        builder.GenerateChamber(5);
+        builder.GenerateCentralRoom(5); 
+        builder.PlaceItemRandom();
+        builder.PlaceItemRandom();
+        builder.PlaceItemRandom();
+        builder.PlaceItemRandom();
+        builder.PlaceWeaponRandom();
+        builder.PlaceWeaponRandom();
+        builder.PlaceWeaponRandom();
+        builder.PlaceItem(10,10,new UnluckyDecorator(new Clock()));
+        builder.PlaceItem(10,11,new UnluckyDecorator(new StrongDecorator(new Axe())));
 
         SetField(player.X,player.Y,new EmptyField());
-
+        builder.PlaceEnemyRandom(new Enemy("bro",60, 10, 5));
+        builder.PlaceEnemyRandom(new Enemy("hello",20, 10, 5));
     }
 
 
@@ -57,46 +67,27 @@ public class Map
         _fields[x, y] = field;
     }
 
-    public void PlaceWall(int x,int y)
+    public Enemy? GetAdjacentEnemy(int x, int y)
     {
-        _fields[x, y] = new Wall();
+        int[] dx = { 0, 0, 1, -1 };
+        int[] dy = { 1, -1, 0, 0 };
+        for (int i = 0; i < 4; i++)
+        {
+            var field = GetField(x + dx[i], y + dy[i]);
+            if (field.HasEnemy()) return field.GetEnemy();
+        }
+        return null;
+    }
+    public Field? GetAdjacentEnemyField(int x, int y)
+    {
+        int[] dx = { 0, 0, 1, -1 };
+        int[] dy = { 1, -1, 0, 0 };
+        for (int i = 0; i < 4; i++)
+        {
+            var field = GetField(x + dx[i], y + dy[i]);
+            if (field.HasEnemy()) return field;
+        }
+        return null;
     }
 
-    private void PlaceItem(int x, int y, Item item)
-    {
-        _fields[x,y].PutItem(item);
-    }
-    
-    
-    public void PlaceItemRandom()
-    {
-        Random rnd = new Random();
-        List<Item> items = new List<Item>{ new Coin(), new Junk(), new Clock(), new Book(), new Gold() };
-        Item randomItem = items[rnd.Next(5)];
-        int x = rnd.Next(Width);
-        int y = rnd.Next(Height);
-        while (!GetField(x, y).IsEmpty())
-        {
-            x = rnd.Next(Width);
-            y = rnd.Next(Height);
-        }
-        _fields[x,y].PutItem(randomItem);
-        
-    }
-    
-    public void PlaceWeaponRandom()
-    {
-        Random rnd = new Random();
-        List<Weapon> weapons = new List<Weapon>{ new DoubleHandedWeapon(), new Axe(), new SingleHandedWeapon() };
-        Item randomItem = weapons[rnd.Next(3)];
-        int x = rnd.Next(Width);
-        int y = rnd.Next(Height);
-        while (!GetField(x, y).IsEmpty())
-        {
-            x = rnd.Next(Width);
-            y = rnd.Next(Height);
-        }
-        _fields[x,y].PutItem(randomItem);
-        
-    }
 }

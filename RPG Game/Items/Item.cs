@@ -19,10 +19,28 @@ public abstract class Item : IDisplayable
         }
     }
 
+    public virtual void OnDrop(Player player) { }
+
     public virtual bool IsEquipable()
     {
         return false;
     }
+    
+    public virtual void TryRemoveAsDecorated(Player player, Hand hand, Item decorated) { }
+
+    public virtual void TryEquipAsDecorated(Player player, Hand hand, Item decorated) { }
+
+    public virtual int AcceptAttack(IAttackVisitor v, Player p)
+    {
+        return v.VisitOther(this,p);
+    }
+
+    public virtual int AcceptDefense(IDefenseVisitor v, Player p)
+    {
+        return v.VisitOtherDefense(this,p);
+    }
+    
+    
 
     public virtual string Description()
     {

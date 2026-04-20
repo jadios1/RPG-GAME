@@ -1,3 +1,5 @@
+using RPG_Game.Items.Weapon;
+
 namespace RPG_Game;
 
 public class DungeonBuilder
@@ -18,7 +20,7 @@ public class DungeonBuilder
                 map.SetField(x,y,new EmptyField());
                 if (y == 0 || x == 0 || y == map.Height-1 || x == map.Width-1)
                 {
-                    map.PlaceWall(x,y);
+                    PlaceWall(x,y);
                 }
 
             }
@@ -47,7 +49,7 @@ public class DungeonBuilder
         {
             for (int x = 0; x < map.Width; x++)
             {
-                map.PlaceWall(x,y);
+                PlaceWall(x,y);
             }
         }
 
@@ -70,10 +72,6 @@ public class DungeonBuilder
                 map.SetField(x,y,new EmptyField());
             }
         }
-        
-        
-        
-        
         
     }
 
@@ -130,4 +128,68 @@ public class DungeonBuilder
         }
 
     }
+    
+    
+    public void PlaceItemRandom()
+    {
+        Random rnd = new Random();
+        List<Item> items = new List<Item>{new Coin(), new Junk(), new Clock(), new Book(), new Gold() };
+        Item randomItem = items[rnd.Next(5)];
+        
+        int x = rnd.Next(map.Width);
+        int y = rnd.Next(map.Height);
+        while (!map.GetField(x, y).IsEmpty())
+        {
+            x = rnd.Next(map.Width);
+            y = rnd.Next(map.Height);
+        }
+        map.GetField(x,y).PutItem(randomItem);
+        
+    }
+    
+    
+    public void PlaceWeaponRandom()
+    {
+        Random rnd = new Random();
+        List<Weapon> weapons = new List<Weapon>{ new DoubleHandedWeapon(), new Axe(), new SingleHandedWeapon() };
+        Item randomItem = weapons[rnd.Next(3)];
+        int x = rnd.Next(map.Width);
+        int y = rnd.Next(map.Height);
+        while (!map.GetField(x, y).IsEmpty())
+        {
+            x = rnd.Next(map.Width);
+            y = rnd.Next(map.Height);
+        }
+        map.GetField(x,y).PutItem(randomItem);
+        
+    }
+    
+    public void PlaceEnemyRandom(Enemy enemy)
+    {
+        Random rnd = new Random();
+        int x = rnd.Next(map.Width);
+        int y = rnd.Next(map.Height);
+        while (!map.GetField(x, y).IsPassable() || map.GetField(x,y).HasEnemy())
+        {
+            x = rnd.Next(map.Width);
+            y = rnd.Next(map.Height);
+        }
+        PlaceEnemy(x, y, enemy);
+    }
+    
+    public void PlaceWall(int x,int y)
+    {
+        map.SetField(x, y, new Wall());
+    }
+
+    public void PlaceItem(int x, int y, Item item)
+    {
+        map.GetField(x,y).PutItem(item);
+    }
+    
+    public void PlaceEnemy(int x, int y, Enemy e)
+    {
+        map.GetField(x,y).SetEnemy(e);
+    }
+    
 }

@@ -1,4 +1,5 @@
 using System.Diagnostics.Contracts;
+using RPG_Game.Visitors;
 
 namespace RPG_Game;
 
@@ -47,6 +48,11 @@ public class Game
                     return true;
                 }
             },
+            { ConsoleKey.F, () => {
+                var enemy = _map.GetAdjacentEnemy(_player.X, _player.Y);
+                if (enemy != null) StartCombat(enemy,_map.GetAdjacentEnemyField(_player.X,_player.Y)!);
+                return enemy != null;
+            }}
         };
 
         Console.CursorVisible = false;
@@ -57,7 +63,7 @@ public class Game
 
     
     public void Run()
-    {
+    { 
         Console.Clear();
         while (true)
         {
@@ -86,6 +92,46 @@ public class Game
         
         
     }
+    
+    private Dictionary<ConsoleKey, (IAttackVisitor, IDefenseVisitor)> _combatActions = new()
+    {
+        { ConsoleKey.D1, (new NormalAttackVisitor(), new NormalDefenseVisitor()) },
+        { ConsoleKey.D2, (new StealthAttackVisitor(), new StealthDefenseVisitor()) },
+        { ConsoleKey.D3, (new MagicalAttackVisitor(), new MagicalDefenseVisitor()) },
+    };
 
+    private void StartCombat(Enemy enemy, Field enemyField)
+    {
+        
+        while (enemy.Health > 0 && _player.Health > 0)
+        {
+            _gameRender.DrawCombat(_player, enemy,_map.Width);
+        
+            var key = Console.ReadKey(true).Key;
+        
+            if (!_combatActions.TryGetValue(key, out var visitors)) continue;
+        
+            var (attackVisitor, defenseVisitor) = visitors;
+        
+            int playerDamage = _player.CalculateAttackDamage(attackVisitor);
+            int playerDefense = _player.CalculateDefense(defenseVisitor);
+        
+            int damageToEnemy = Math.Max(0, playerDamage - enemy.Armor);
+            int damageToPlayer = Math.Max(0, enemy.Attack - playerDefense);
+        
+            enemy.Health -= damageToEnemy;
+            _player.Health -= damageToPlayer;
+            Console.SetCursorPosition(_map.Width+1, 12);
+            Console.WriteLine($"L:{_player.LeftHand.HeldItem?.GetName() ?? "empty"} R:{_player.RightHand.HeldItem?.GetName() ?? "empty"}".PadRight(40));
+            Console.SetCursorPosition(_map.Width+1, 13);
+            Console.WriteLine($"DMG:{playerDamage} DEF:{playerDefense}".PadRight(40));
+        }
+    
+        if (enemy.Health <= 0) enemyField.SetEnemy(null);
+        if (_player.Health <= 0)
+        {
+            _gameRender.DrawGameOver();
+        };
+    }
 
 }
