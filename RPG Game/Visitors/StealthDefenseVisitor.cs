@@ -1,6 +1,7 @@
+using RPG_Game.Items;
 using RPG_Game.Items.Weapon;
 
-namespace RPG_Game;
+namespace RPG_Game.Visitors;
 
 public class StealthDefenseVisitor : IDefenseVisitor
 {

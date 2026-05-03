@@ -1,3 +1,5 @@
+using RPG_Game.Logger;
+
 namespace RPG_Game.Items.Weapon;
 
 public class SingleHandedWeapon : LightWeapon
@@ -22,11 +24,13 @@ public class SingleHandedWeapon : LightWeapon
     public override void TryEquip(Player player,Hand hand)
     {
         player.EquipSingleHanded(this,hand);
+
     }
 
     public override void TryRemove(Player player, Hand hand)
     {
         player.RemoveSingleHanded(hand);
+
     }
     public override bool IsEquipable()
     {

@@ -1,6 +1,7 @@
 using RPG_Game.Fields;
+using RPG_Game.Visitors;
 
-namespace RPG_Game;
+namespace RPG_Game.Items;
 
 public abstract class Item : IDisplayable
 {

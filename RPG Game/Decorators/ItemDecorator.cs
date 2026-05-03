@@ -1,4 +1,6 @@
 using RPG_Game.Fields;
+using RPG_Game.Items;
+using RPG_Game.Visitors;
 
 namespace RPG_Game.Decorators;
 

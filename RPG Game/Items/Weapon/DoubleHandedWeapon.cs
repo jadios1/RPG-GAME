@@ -1,3 +1,5 @@
+using RPG_Game.Logger;
+
 namespace RPG_Game.Items.Weapon;
 
 public class DoubleHandedWeapon : HeavyWeapon
@@ -21,6 +23,7 @@ public class DoubleHandedWeapon : HeavyWeapon
     public override void TryEquip(Player player,Hand hand)
     {
         player.EquipDoubleHanded(this);
+
     }
     
     public override void TryEquipAsDecorated(Player player, Hand hand, Item decorated)

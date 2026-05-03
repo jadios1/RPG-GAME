@@ -1,11 +1,15 @@
 using RPG_Game.Fields;
+using RPG_Game.Items;
+using RPG_Game.Logger;
+using RPG_Game.Visitors;
 
 namespace RPG_Game;
 
 public class Player : IDisplayable
 {
-    public Player()
+    public Player(string name)
     {
+        Name = name;
         X = 2;
         Y = 2;
         Strength = 0;
@@ -25,6 +29,8 @@ public class Player : IDisplayable
 
     public int SelectedSlot;
     public List<Item> Inventory { get; }
+    
+    public string Name { get; set; }
     public int X{ get;private set; }
     public int Y{ get;private set; }
     public int Strength { get; set; }
@@ -134,6 +140,7 @@ public class Player : IDisplayable
             if (item != null)
             {
                 item.TryEquip(this,LeftHand);
+
                 return true;
             }
         }
@@ -172,7 +179,9 @@ public class Player : IDisplayable
     {
         if (!map.GetField(X, Y).IsEmpty())
         {
+            string itemName = map.GetField(X, Y).GetItem()?.GetName() ?? "unknown item";
             PutIntoInventory(map.GetField(X, Y).GetItem(), map.GetField(X, Y));
+            GameLog.Instance.Log("Player picked up " + itemName);
             return true;
         }
 

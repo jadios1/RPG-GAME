@@ -1,6 +1,6 @@
 using RPG_Game.Fields;
 
-namespace RPG_Game;
+namespace RPG_Game.Items;
 
 public class Coin : Currency
 {

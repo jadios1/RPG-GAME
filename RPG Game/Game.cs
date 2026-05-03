@@ -1,5 +1,7 @@
 using System.Diagnostics.Contracts;
 using RPG_Game.Fields;
+using RPG_Game.Logger;
+using RPG_Game.Themes;
 using RPG_Game.Visitors;
 
 namespace RPG_Game;
@@ -12,13 +14,17 @@ public class Game
 
     private Dictionary<ConsoleKey, Func<bool>> _keyActions;
     
-    public Game()
+    public Game(string playername)
     {
-        _player = new Player();
-        _map = new Map(20,40,_player);
-
+        _player = new Player(playername);
+        var themes = new List<IDungeonTheme> { new LibraryTheme() };
+        IDungeonTheme theme = themes[new Random().Next(themes.Count)];
+        Console.WriteLine(theme.IntroMessage);
+        _map = new Map(20, 40, _player, theme);
         _gameRender = new GameRender();
 
+        
+        
         _keyActions = new Dictionary<ConsoleKey, Func<bool>>
         {
             { ConsoleKey.W,() => _map.TryMovePlayer(_player, 0, -1) },
@@ -28,6 +34,7 @@ public class Game
             {
                 ConsoleKey.E,() => _player.PickUpItem(_map)
             },
+            { ConsoleKey.J,() => _gameRender.DrawFullLog()},
             { ConsoleKey.R,() => _player.DropItem(_map) },
             { ConsoleKey.Z,() => _player.LeftHandPickup() },
             { ConsoleKey.X,() => _player.RightHandPickup() },
@@ -120,15 +127,22 @@ public class Game
         
             int damageToEnemy = Math.Max(0, playerDamage - enemy.Armor);
             int damageToPlayer = Math.Max(0, enemy.Attack - playerDefense);
-        
+            GameLog.Instance.Log("Player dealt " + damageToEnemy + "DMG to enemy (" + enemy.Name + ")");
+            GameLog.Instance.Log("Enemy dealt " + damageToPlayer + "DMG to player (" + _player.Name + ")");
+
             enemy.Health -= damageToEnemy;
             _player.Health -= damageToPlayer;
         }
         Console.Clear();
 
-        if (enemy.Health <= 0) enemyField.SetEnemy(null);
+        if (enemy.Health <= 0)
+        {
+            GameLog.Instance.Log("Player defeated enemy (" + enemy.Name + ")");
+            enemyField.SetEnemy(null);
+        }
         if (_player.Health <= 0)
         {
+            GameLog.Instance.Log("Player (" +_player.Name + ") Died!");
             _gameRender.DrawGameOver();
         };
     }

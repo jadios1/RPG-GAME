@@ -1,39 +1,44 @@
 using RPG_Game.Decorators;
 using RPG_Game.Fields;
+using RPG_Game.Items;
 using RPG_Game.Items.Weapon;
+using RPG_Game.Logger;
+using RPG_Game.Themes;
 
 namespace RPG_Game;
 
 public class Map
 {
-    public Map(int height,int width,Player player)
+    public Map(int height,int width,Player player,IDungeonTheme theme)
     {
         Height = height;
         Width = width;
         _fields = new Field[width, height];
         DungeonBuilder builder = new DungeonBuilder(this);
-
-        builder.GenerateFilled();
-        builder.GenerateChamber(5);
-        builder.GeneratePath(50);
-        builder.GeneratePath(50);
-        builder.GeneratePath(50);
-        builder.GeneratePath(50);
-        builder.GenerateChamber(5);
-        builder.GenerateCentralRoom(5); 
-        builder.PlaceItemRandom();
-        builder.PlaceItemRandom();
-        builder.PlaceItemRandom();
-        builder.PlaceItemRandom();
-        builder.PlaceWeaponRandom();
-        builder.PlaceWeaponRandom();
-        builder.PlaceWeaponRandom();
-        builder.PlaceItem(10,10,new UnluckyDecorator(new Clock()));
-        builder.PlaceItem(10,11,new UnluckyDecorator(new StrongDecorator(new Axe())));
-
         SetField(player.X,player.Y,new EmptyField());
-        builder.PlaceEnemyRandom(new Enemy("bro",60, 10, 5));
-        builder.PlaceEnemyRandom(new Enemy("hello",20, 10, 5));
+        builder.GetPlayerSpawn(player.X,player.Y);
+        theme.Generate(builder);
+        builder.ConnectRooms();
+        foreach (var weapon in theme.GetWeaponPool())
+        {
+            builder.PlaceWeaponRandom(weapon);            
+        }
+
+        foreach (var item in theme.GetItemPool())
+        {
+            builder.PlaceItemRandom(item);
+
+        }
+
+        foreach (var enemies in theme.GetEnemies())
+        {
+            builder.PlaceEnemyRandom(enemies);
+        }
+        builder.PlaceItemRandom(theme.GetArtifact());
+        builder.PlaceItemRandom(theme.GetArtifact());
+        builder.PlaceItemRandom(theme.GetArtifact());
+        builder.PlaceItemRandom(theme.GetArtifact());
+
     }
 
 
@@ -54,6 +59,7 @@ public class Map
             return true;
         }
 
+        if(!_fields[player.X + dx, player.Y + dy].HasEnemy()) GameLog.Instance.Log("Walking into wall!");
         return false;
 
     }

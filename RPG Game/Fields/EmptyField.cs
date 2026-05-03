@@ -1,3 +1,5 @@
+using RPG_Game.Items;
+
 namespace RPG_Game.Fields;
 
 public class EmptyField : Field

@@ -1,3 +1,5 @@
+using RPG_Game.Visitors;
+
 namespace RPG_Game.Items.Weapon;
 
 public abstract class HeavyWeapon : Weapon
