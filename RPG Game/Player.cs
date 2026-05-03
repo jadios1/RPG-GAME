@@ -12,7 +12,7 @@ public class Player : IDisplayable
         Name = name;
         X = 2;
         Y = 2;
-        Strength = 0;
+        Strength = 10;
         Dexterity = 0;
         Luck = 0;
         Aggression = 0;

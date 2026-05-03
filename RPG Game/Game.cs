@@ -11,15 +11,17 @@ public class Game
     private Map _map;
     private Player _player;
     private GameRender _gameRender;
-
+    private IDungeonTheme theme;
     private Dictionary<ConsoleKey, Func<bool>> _keyActions;
     
     public Game(string playername)
     {
         _player = new Player(playername);
-        var themes = new List<IDungeonTheme> { new LibraryTheme() };
-        IDungeonTheme theme = themes[new Random().Next(themes.Count)];
-        Console.WriteLine(theme.IntroMessage);
+        
+        var themes = new List<IDungeonTheme> { new LibraryTheme(),new BossTheme(),new MagicalTheme() };
+        theme = themes[new Random().Next(themes.Count)];
+        
+        
         _map = new Map(20, 40, _player, theme);
         _gameRender = new GameRender();
 
@@ -72,6 +74,8 @@ public class Game
     
     public void Run()
     { 
+        Console.WriteLine(theme.IntroMessage);
+        Console.ReadKey(true);
         Console.Clear();
         while (true)
         {
@@ -94,6 +98,8 @@ public class Game
             else
             {
                 _gameRender.CannotUse(_map,true);
+                GameLog.Instance.Log("Pressed unknown key!");
+
             }
             
         }

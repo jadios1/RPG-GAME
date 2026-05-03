@@ -8,7 +8,7 @@ public interface IDungeonTheme
 {
     string IntroMessage { get; }
     List<Item> GetItemPool();
-    List<Weapon> GetWeaponPool();
+    List<Item> GetWeaponPool();
 
     Item GetArtifact();
     List<Enemy> GetEnemies();

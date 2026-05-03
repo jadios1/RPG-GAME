@@ -140,7 +140,7 @@ public class DungeonBuilder
     public void PlaceRandomItem(List<Item>? itemPool = null)
     {
         List<Item> items = itemPool ?? new List<Item> { new Coin(), new Junk(), new Clock(), new Book(), new Gold() };
-        Item? randomItem = items[_rnd.Next(5)];
+        Item? randomItem = items[_rnd.Next(items.Count)];
         
         int x = _rnd.Next(_map.Width);
         int y = _rnd.Next(_map.Height);
@@ -182,19 +182,6 @@ public class DungeonBuilder
         }
         _map.GetField(x,y).PutItem(randomItem);
         
-    }
-
-    public void PlaceWeaponRandom(Weapon weapon)
-    {
-        int x = _rnd.Next(_map.Width);
-        int y = _rnd.Next(_map.Height);
-        while (!_map.GetField(x, y).IsEmpty())
-        {
-            x = _rnd.Next(_map.Width);
-            y = _rnd.Next(_map.Height);
-        }
-        _map.GetField(x,y).PutItem(weapon);
-
     }
 
     

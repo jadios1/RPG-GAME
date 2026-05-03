@@ -6,7 +6,7 @@ namespace RPG_Game.Themes;
 
 public class LibraryTheme : IDungeonTheme
 {
-    public string IntroMessage { get; } = "Hello guys";
+    public string IntroMessage { get; } = "The smell of old books fills the air\": the dungeon consists of many rooms, the item pool includes books, pens and Coins, the dungeon contains the \"Wisdom Book\" and library staff";
     
     public List<Item> GetItemPool()
     {
@@ -20,9 +20,9 @@ public class LibraryTheme : IDungeonTheme
 
     }
 
-    public List<Weapon> GetWeaponPool()
+    public List<Item> GetWeaponPool()
     {
-        List<Weapon> weapons = new List<Weapon>
+        List<Item> weapons = new List<Item>
         {
             new DoubleHandedWeapon(),
             new SingleHandedWeapon(),

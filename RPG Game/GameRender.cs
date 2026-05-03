@@ -175,7 +175,6 @@ public class GameRender
         {
             Console.SetCursorPosition(0, map.Height);
             Console.WriteLine("Cannot use that key!");   
-            GameLog.Instance.Log("Pressed unknown key!");
 
         }
         else
@@ -232,11 +231,11 @@ public class GameRender
     public void DrawLog()
     {
         var recentLogs = GameLog.Instance.GetRecent(3);
-        Console.SetCursorPosition(70, 0);
+        Console.SetCursorPosition(41, 21);
         Console.WriteLine("Recent Logs:".PadRight(50));
         for (int i = 0; i < 3; i++)
         {
-            Console.SetCursorPosition(70, i + 1);
+            Console.SetCursorPosition(41, i + 22);
             Console.WriteLine(i < recentLogs.Count ? recentLogs[i].PadRight(50) : "".PadRight(50));
         }
 

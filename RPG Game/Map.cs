@@ -21,7 +21,7 @@ public class Map
         builder.ConnectRooms();
         foreach (var weapon in theme.GetWeaponPool())
         {
-            builder.PlaceWeaponRandom(weapon);            
+            builder.PlaceItemRandom(weapon);            
         }
 
         foreach (var item in theme.GetItemPool())
@@ -34,9 +34,6 @@ public class Map
         {
             builder.PlaceEnemyRandom(enemies);
         }
-        builder.PlaceItemRandom(theme.GetArtifact());
-        builder.PlaceItemRandom(theme.GetArtifact());
-        builder.PlaceItemRandom(theme.GetArtifact());
         builder.PlaceItemRandom(theme.GetArtifact());
 
     }

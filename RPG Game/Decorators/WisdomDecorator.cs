@@ -15,7 +15,7 @@ public class WisdomDecorator : ItemDecorator
     
     public override void OnPickup(Player player, Field field)
     {
-        player.Wisdom -= 5;
+        player.Wisdom += 5;
         base.OnPickup(player, field);
     }
     
@@ -23,6 +23,6 @@ public class WisdomDecorator : ItemDecorator
 
     public override void OnDrop(Player player)
     {
-        player.Wisdom += 5;
+        player.Wisdom -= 5;
     }
 }
