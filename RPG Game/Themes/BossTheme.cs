@@ -24,7 +24,7 @@ public class BossTheme : IDungeonTheme
 
     public List<Enemy> GetEnemies()
     {
-        return new List<Enemy>() { new Enemy("Boss", 500, 10, 5) };
+        return new List<Enemy>() { new Enemy("Boss", 500, 50, 5) };
     }
 
     public void Generate(DungeonBuilder builder)

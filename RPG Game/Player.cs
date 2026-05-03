@@ -71,6 +71,7 @@ public class Player : IDisplayable
     {
         if (hand.IsEmpty())
         {
+            GameLog.Instance.Log(item.GetName() + " equipped!");
             hand.Hold(item);
             Inventory.Remove(item);
         }
@@ -80,6 +81,7 @@ public class Player : IDisplayable
     {
         if (LeftHand.IsEmpty() && RightHand.IsEmpty())
         {
+            GameLog.Instance.Log(item.GetName() + " equipped!");
             LeftHand.Hold(item);
             RightHand.Hold(item);
             Inventory.Remove(item);
@@ -90,7 +92,12 @@ public class Player : IDisplayable
     {
         if (Inventory.Count < 3)
         {
-            if (hand.HeldItem != null) Inventory.Add(hand.HeldItem);
+
+            if (hand.HeldItem != null)
+            {
+                GameLog.Instance.Log(hand.HeldItem.GetName() + " unequipped!");
+                Inventory.Add(hand.HeldItem);
+            }
 
             LeftHand.Clear();
             RightHand.Clear();
@@ -102,7 +109,11 @@ public class Player : IDisplayable
     {
         if (Inventory.Count < 3)
         {
-            if (hand.HeldItem != null) Inventory.Add(hand.HeldItem);
+            if (hand.HeldItem != null)
+            {
+                GameLog.Instance.Log(hand.HeldItem.GetName() + " unequipped!");
+                Inventory.Add(hand.HeldItem);
+            }
             hand.Clear();
         }
         
@@ -134,9 +145,10 @@ public class Player : IDisplayable
 
     public bool LeftHandPickup()
     {
+        var item = this.SelectedItem();
+
         if (LeftHand.IsEmpty())
         {
-            var item = this.SelectedItem();
             if (item != null)
             {
                 item.TryEquip(this,LeftHand);
@@ -147,6 +159,7 @@ public class Player : IDisplayable
         else
         {
             LeftHand.HeldItem?.TryRemove(this,LeftHand);
+
             return true;
         }
 
@@ -156,9 +169,10 @@ public class Player : IDisplayable
 
     public bool RightHandPickup()
     {
+        var item = SelectedItem();
+
         if (RightHand.IsEmpty())
         {
-            var item = SelectedItem();
             if (item != null)
             {
                 item.TryEquip(this,RightHand);
@@ -168,6 +182,8 @@ public class Player : IDisplayable
         else
         {
             RightHand.HeldItem?.TryRemove(this,RightHand);
+         
+
             return true;
         }
 

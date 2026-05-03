@@ -236,7 +236,7 @@ public class GameRender
         for (int i = 0; i < 3; i++)
         {
             Console.SetCursorPosition(41, i + 22);
-            Console.WriteLine(i < recentLogs.Count ? recentLogs[i].PadRight(50) : "".PadRight(50));
+            Console.WriteLine(i < recentLogs.Count ? recentLogs[i].PadRight(50) : "".PadRight(60));
         }
 
     }
