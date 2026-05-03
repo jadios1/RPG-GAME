@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using RPG_Game.Fields;
 using RPG_Game.Logger;
 using RPG_Game.Themes;
@@ -11,18 +10,18 @@ public class Game
     private Map _map;
     private Player _player;
     private GameRender _gameRender;
-    private IDungeonTheme theme;
+    private IDungeonTheme _theme;
     private Dictionary<ConsoleKey, Func<bool>> _keyActions;
     
     public Game(string playername)
     {
         _player = new Player(playername);
         
-        var themes = new List<IDungeonTheme> { new LibraryTheme(),new BossTheme(),new MagicalTheme() };
-        theme = themes[new Random().Next(themes.Count)];
+        var themes = new List<IDungeonTheme> { new MagicalTheme() };
+        _theme = themes[new Random().Next(themes.Count)];
         
         
-        _map = new Map(20, 40, _player, theme);
+        _map = new Map(20, 40, _player, _theme);
         _gameRender = new GameRender();
 
         
@@ -74,7 +73,7 @@ public class Game
     
     public void Run()
     { 
-        Console.WriteLine(theme.IntroMessage);
+        Console.WriteLine(_theme.IntroMessage);
         Console.ReadKey(true);
         Console.Clear();
         while (true)
@@ -150,7 +149,7 @@ public class Game
         {
             GameLog.Instance.Log("Player (" +_player.Name + ") Died!");
             _gameRender.DrawGameOver();
-        };
+        }
     }
 
 }

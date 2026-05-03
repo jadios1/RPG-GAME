@@ -231,11 +231,11 @@ public class GameRender
     public void DrawLog()
     {
         var recentLogs = GameLog.Instance.GetRecent(3);
-        Console.SetCursorPosition(41, 21);
+        Console.SetCursorPosition(41, 23);
         Console.WriteLine("Recent Logs:".PadRight(50));
         for (int i = 0; i < 3; i++)
         {
-            Console.SetCursorPosition(41, i + 22);
+            Console.SetCursorPosition(41, i + 24);
             Console.WriteLine(i < recentLogs.Count ? recentLogs[i].PadRight(50) : "".PadRight(60));
         }
 

@@ -51,9 +51,13 @@ public class LibraryTheme : IDungeonTheme
     public void Generate(DungeonBuilder builder)
     {
         builder.GenerateFilled();
-        builder.GenerateCentralRoom(6);
-        builder.GenerateChamber(4);
-        builder.GenerateChamber(4);
-        builder.GenerateChamber(3);
+        builder.PlaceRoom(4,17,1,1);
+        builder.PlaceRoom(4,17,7,1);
+        builder.PlaceRoom(4,17,13,1);
+        builder.PlaceRoom(4,17,19,1);
+        builder.PlaceRoom(4,17,25,1);
+        builder.PlaceRoom(4,17,31,1);
+
+        
     }
 }

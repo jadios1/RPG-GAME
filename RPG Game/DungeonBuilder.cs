@@ -93,6 +93,27 @@ public class DungeonBuilder
         roomCenters.Add((centerX, centerY));
     }
     
+    public void PlaceRoom(int sizeX,int sizeY,int _x,int _y)
+    {
+
+        int startX = _x;
+        int startY = _y;
+
+        for (int y = startY; y < startY + sizeY; y++)
+        {
+            for (int x = startX; x < startX + sizeX; x++)
+            {
+                _map.SetField(x, y, new EmptyField());
+            }
+        }
+
+        int centerX = startX + sizeX / 2;
+        int centerY = startY + sizeY / 2;
+
+        roomCenters.Add((centerX, centerY));
+    }
+
+    
     public void ConnectRooms()
     {
         for (int i = 0; i < roomCenters.Count - 1; i++)

@@ -30,6 +30,7 @@ public class MagicalTheme : IDungeonTheme
     public void Generate(DungeonBuilder builder)
     {
         builder.GenerateFilled();
+        builder.GenerateCentralRoom(2);
         builder.GenerateChamber(5);
         builder.GenerateChamber(5);
         builder.GenerateChamber(5);

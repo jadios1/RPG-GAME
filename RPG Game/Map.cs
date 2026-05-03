@@ -23,19 +23,18 @@ public class Map
         {
             builder.PlaceItemRandom(weapon);            
         }
-
+        
         foreach (var item in theme.GetItemPool())
         {
             builder.PlaceItemRandom(item);
-
+        
         }
-
+        
         foreach (var enemies in theme.GetEnemies())
         {
             builder.PlaceEnemyRandom(enemies);
         }
         builder.PlaceItemRandom(theme.GetArtifact());
-
     }
 
 

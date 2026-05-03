@@ -10,8 +10,8 @@ public class Player : IDisplayable
     public Player(string name)
     {
         Name = name;
-        X = 2;
-        Y = 2;
+        X = 20;
+        Y = 10;
         Strength = 10;
         Dexterity = 0;
         Luck = 0;
