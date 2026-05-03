@@ -22,6 +22,5 @@ public class NormalAttackVisitor : IAttackVisitor
 
     public int VisitOther(Item item, Player player)
     {
-        return 0;
-    }
+        return player.Strength;    }
 }

@@ -9,7 +9,7 @@ public class BossTheme : IDungeonTheme
     public string IntroMessage { get; } = "You enter into a dungeon with a special item and a dangerous Boss";
     public List<Item> GetItemPool()
     {
-        return new List<Item>() {new Book()};
+        return new List<Item>() {};
     }
 
     public List<Item> GetWeaponPool()
@@ -19,7 +19,7 @@ public class BossTheme : IDungeonTheme
 
     public Item GetArtifact()
     {
-        return new Book();
+        return new Skull();
     }
 
     public List<Enemy> GetEnemies()

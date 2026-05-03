@@ -22,6 +22,6 @@ public class StealthDefenseVisitor : IDefenseVisitor
 
     public int VisitOtherDefense(Item item, Player player)
     {
-        return 0;   
+        return 0;
     }
 }
