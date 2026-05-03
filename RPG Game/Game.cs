@@ -17,7 +17,7 @@ public class Game
     {
         _player = new Player(playername);
         
-        var themes = new List<IDungeonTheme> { new MagicalTheme() };
+        var themes = new List<IDungeonTheme> { new MagicalTheme(),new BossTheme(),new LibraryTheme() };
         _theme = themes[new Random().Next(themes.Count)];
         
         
