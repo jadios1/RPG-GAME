@@ -230,6 +230,9 @@ public class DungeonBuilder
     
     public void PlaceEnemy(int x, int y, Enemy e)
     {
+        e.X = x;
+        e.Y = y;
+        e.CurrentMap = _map;
         _map.GetField(x,y).SetEnemy(e);
     }
     

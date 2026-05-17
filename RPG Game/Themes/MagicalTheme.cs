@@ -1,6 +1,6 @@
 using RPG_Game.Items;
 using RPG_Game.Items.Weapon;
-
+using RPG_Game.Species;
 namespace RPG_Game.Themes;
 
 public class MagicalTheme : IDungeonTheme
@@ -24,7 +24,7 @@ public class MagicalTheme : IDungeonTheme
 
     public List<Enemy> GetEnemies()
     {
-        return new List<Enemy>() { new Enemy("Wizard", 150, 15, 10), new Enemy("Mage", 100, 20, 5) };
+        return new List<Enemy>() { new Enemy("Wizard", 150, 15, 10, new SkeletonSpecies()), new Enemy("Mage", 100, 20, 5, new GoblinSpecies()) };
     }
 
     public void Generate(DungeonBuilder builder)

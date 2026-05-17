@@ -9,4 +9,8 @@ public abstract class HeavyWeapon : Weapon
 
     public override int AcceptDefense(IDefenseVisitor visitor, Player player)
         => visitor.VisitHeavyDefense(this, player);
+    
+    
+    public override int GetSoundRange() => 10;
+
 }

@@ -1,3 +1,4 @@
+using RPG_Game.Events;
 using RPG_Game.Fields;
 using RPG_Game.Logger;
 using RPG_Game.Themes;
@@ -16,8 +17,9 @@ public class Game
     public Game(string playername)
     {
         _player = new Player(playername);
+        _player = new Player(playername);
         
-        var themes = new List<IDungeonTheme> { new MagicalTheme(),new BossTheme(),new LibraryTheme() };
+        var themes = new List<IDungeonTheme> { new MagicalTheme(),new LibraryTheme() };
         _theme = themes[new Random().Next(themes.Count)];
         
         
@@ -34,6 +36,7 @@ public class Game
             { ConsoleKey.D,() => _map.TryMovePlayer(_player, 1, 0) },
             {
                 ConsoleKey.E,() => _player.PickUpItem(_map)
+                
             },
             { ConsoleKey.J,() => _gameRender.DrawFullLog()},
             { ConsoleKey.R,() => _player.DropItem(_map) },
@@ -142,8 +145,11 @@ public class Game
 
         if (enemy.Health <= 0)
         {
-            GameLog.Instance.Log("Player defeated enemy (" + enemy.Name + ")");
+            enemy.Notify(new EnemyDiedEvent(enemy));
+            enemy.Unsubscribe(enemy.Species);
+            enemy.Species.RemoveMember(enemy);
             enemyField.SetEnemy(null);
+            GameLog.Instance.Log("Player defeated enemy (" + enemy.Name + ")");
         }
         if (_player.Health <= 0)
         {

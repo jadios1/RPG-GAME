@@ -1,4 +1,5 @@
 using RPG_Game.Decorators;
+using RPG_Game.Events;
 using RPG_Game.Fields;
 using RPG_Game.Items;
 using RPG_Game.Items.Weapon;
@@ -7,8 +8,9 @@ using RPG_Game.Themes;
 
 namespace RPG_Game;
 
-public class Map
+public class Map : IObservable
 {
+    
     public Map(int height,int width,Player player,IDungeonTheme theme)
     {
         Height = height;
@@ -33,12 +35,21 @@ public class Map
         foreach (var enemies in theme.GetEnemies())
         {
             builder.PlaceEnemyRandom(enemies);
+            Subscribe(enemies);
         }
         builder.PlaceItemRandom(theme.GetArtifact());
     }
 
 
+    private List<IObserver> _observers = new();
 
+    public void Subscribe(IObserver observer) => _observers.Add(observer);
+    public void Unsubscribe(IObserver observer) => _observers.Remove(observer);
+    public void Notify(IEvent gameEvent)
+    {
+        foreach (var obs in _observers)
+            obs.OnNotify(gameEvent);
+    }
 
     
     
@@ -95,4 +106,34 @@ public class Map
         return null;
     }
 
+    public int GetDistance(int x1, int y1, int x2, int y2)
+    {
+        if (!GetField(x1, y1).IsPassable() && !GetField(x1,y1).HasEnemy()) return int.MaxValue;
+    
+        var visited = new bool[Width, Height];
+        var queue = new Queue<(int x, int y, int dist)>();
+        queue.Enqueue((x1, y1, 0));
+        visited[x1, y1] = true;
+
+        int[] dx = { 0, 0, 1, -1 };
+        int[] dy = { 1, -1, 0, 0 };
+
+        while (queue.Count > 0)
+        {
+            var (cx, cy, dist) = queue.Dequeue();
+            if (cx == x2 && cy == y2) return dist;
+
+            for (int i = 0; i < 4; i++)
+            {
+                int nx = cx + dx[i];
+                int ny = cy + dy[i];
+                if (nx < 0 || nx >= Width || ny < 0 || ny >= Height) continue;
+                if (visited[nx, ny]) continue;
+                if (!GetField(nx, ny).IsPassable() && !(nx == x2 && ny == y2)) continue;
+                visited[nx, ny] = true;
+                queue.Enqueue((nx, ny, dist + 1));
+            }
+        }
+        return int.MaxValue;
+    }
 }

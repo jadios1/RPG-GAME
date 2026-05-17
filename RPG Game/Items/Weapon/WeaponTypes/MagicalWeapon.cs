@@ -14,4 +14,6 @@ public abstract class MagicalWeapon :Weapon
         return visitor.VisitMagicalDefense(this,player);
 
     }
+    public override int GetSoundRange() => 5;
+
 }

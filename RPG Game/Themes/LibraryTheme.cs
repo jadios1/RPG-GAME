@@ -1,6 +1,7 @@
 using RPG_Game.Decorators;
 using RPG_Game.Items;
 using RPG_Game.Items.Weapon;
+using RPG_Game.Species;
 
 namespace RPG_Game.Themes;
 
@@ -38,11 +39,13 @@ public class LibraryTheme : IDungeonTheme
 
     public List<Enemy> GetEnemies()
     {
+        var goblinspecies = new GoblinSpecies();
+
         List<Enemy> enemies = new List<Enemy>
         {
-            new Enemy("Book Keeper", 50, 20, 0),
-            new Enemy("Librarian", 100, 5, 10),
-            new Enemy("Nerd", 20, 3, 10)
+            new Enemy("Book Keeper", 50, 20, 0,goblinspecies),
+            new Enemy("Librarian", 100, 5, 10,goblinspecies),
+            new Enemy("Nerd", 20, 3, 10 ,goblinspecies )
         };
 
         return enemies;

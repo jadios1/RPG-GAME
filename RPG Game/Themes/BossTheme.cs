@@ -1,6 +1,7 @@
 using RPG_Game.Decorators;
 using RPG_Game.Items;
 using RPG_Game.Items.Weapon;
+using RPG_Game.Species;
 
 namespace RPG_Game.Themes;
 
@@ -24,7 +25,7 @@ public class BossTheme : IDungeonTheme
 
     public List<Enemy> GetEnemies()
     {
-        return new List<Enemy>() { new Enemy("Boss", 500, 50, 5) };
+        return new List<Enemy>() { new Enemy("Boss", 500, 50, 5, new GoblinSpecies()) };
     }
 
     public void Generate(DungeonBuilder builder)
