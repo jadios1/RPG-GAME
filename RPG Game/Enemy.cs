@@ -52,7 +52,7 @@ public class Enemy : IDisplayable, IObservable, IObserver, IEventVisitor
     }
 
     public void Visit(SoundEvent e)
-    {
+    { 
         if (CurrentMap == null) return;
         int dist = CurrentMap.GetDistance(X, Y, e.X, e.Y);
         if (dist <= e.Range)

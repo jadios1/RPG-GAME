@@ -1,3 +1,4 @@
+using RPG_Game.Events;
 using RPG_Game.Fields;
 using RPG_Game.Items;
 using RPG_Game.Logger;
@@ -72,6 +73,7 @@ public class Player : IDisplayable
         if (hand.IsEmpty())
         {
             GameLog.Instance.Log(item.GetName() + " equipped!");
+            
             hand.Hold(item);
             Inventory.Remove(item);
         }
@@ -152,6 +154,7 @@ public class Player : IDisplayable
             if (item != null)
             {
                 item.TryEquip(this,LeftHand);
+ 
 
                 return true;
             }
@@ -176,6 +179,8 @@ public class Player : IDisplayable
             if (item != null)
             {
                 item.TryEquip(this,RightHand);
+       
+                
                 return true;
             }
         }
@@ -196,6 +201,13 @@ public class Player : IDisplayable
         if (!map.GetField(X, Y).IsEmpty())
         {
             string itemName = map.GetField(X, Y).GetItem()?.GetName() ?? "unknown item";
+            
+            int range = map.GetField(X, Y).GetItem()?.GetSoundRange() ?? 0;
+            if (range > 0)
+            {
+                map.Notify(new SoundEvent(X,Y,range,itemName));
+            }
+
             PutIntoInventory(map.GetField(X, Y).GetItem(), map.GetField(X, Y));
             GameLog.Instance.Log("Player picked up " + itemName);
             return true;

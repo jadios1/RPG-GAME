@@ -9,7 +9,10 @@ public class SoundEvent : IEvent
     
     public SoundEvent(int x, int y, int range, string source)
     {
-        X = x; Y = y; Range = range; Source = source;
+        X = x; 
+        Y = y; 
+        Range = range; 
+        Source = source;
     }
     
     public void Accept(IEventVisitor visitor) => visitor.Visit(this);

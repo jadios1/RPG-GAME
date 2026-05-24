@@ -43,7 +43,8 @@ public abstract class Item : IDisplayable
         return v.VisitOtherDefense(this,p);
     }
     
-    
+    public virtual int GetSoundRange() => 0;
+
 
     public virtual string Description()
     {

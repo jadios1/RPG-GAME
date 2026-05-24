@@ -27,6 +27,5 @@ public abstract class Weapon : Item
     {
         player.RemoveSingleHanded(hand);
     }
-    public virtual int GetSoundRange() => 2;
 
 }

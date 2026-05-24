@@ -27,6 +27,8 @@ public class SingleHandedWeapon : LightWeapon
 
     }
 
+
+    
     public override void TryRemove(Player player, Hand hand)
     {
         player.RemoveSingleHanded(hand);

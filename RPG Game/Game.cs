@@ -19,7 +19,7 @@ public class Game
         _player = new Player(playername);
         _player = new Player(playername);
         
-        var themes = new List<IDungeonTheme> { new MagicalTheme(),new LibraryTheme() };
+        var themes = new List<IDungeonTheme> { new MagicalTheme(),new LibraryTheme(), new BossTheme()};
         _theme = themes[new Random().Next(themes.Count)];
         
         

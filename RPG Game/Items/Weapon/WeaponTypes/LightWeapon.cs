@@ -9,6 +9,8 @@ public abstract class LightWeapon : Weapon
         return visitor.VisitLight(this,player);
     }
 
+    public override int GetSoundRange() => 2;
+
     public override int AcceptDefense(IDefenseVisitor visitor, Player player)
     {
         return visitor.VisitLightDefense(this,player);
