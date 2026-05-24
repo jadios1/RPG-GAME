@@ -25,7 +25,17 @@ public class BossTheme : IDungeonTheme
 
     public List<Enemy> GetEnemies()
     {
-        return new List<Enemy>() { new Enemy("Boss", 500, 50, 5, new GoblinSpecies()) };
+        var goblinspecies = new GoblinSpecies();
+        var sceletonspecies = new SkeletonSpecies();
+        List<Enemy> enemies = new List<Enemy>
+        {
+            new Enemy("BOSS", 150, 20, 20,goblinspecies),
+            new Enemy("Little Sceleton", 30, 20, 0,sceletonspecies),
+            new Enemy("Little Goblin", 30, 5, 10,goblinspecies),
+            new Enemy("Little Sceleton", 20, 3, 10 ,sceletonspecies)
+        };
+
+        return enemies;
     }
 
     public void Generate(DungeonBuilder builder)

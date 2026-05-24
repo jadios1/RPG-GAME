@@ -79,11 +79,15 @@ public class Game
         Console.WriteLine(_theme.IntroMessage);
         Console.ReadKey(true);
         Console.Clear();
+        int i = 0;
+
         while (true)
         {
             _gameRender.DrawMap(_map,_map.Height,_map.Width,_player);
             _gameRender.Info(_map.Width,_player,_map);
-
+            
+            if(i%3==0)_map.MoveEnemies();
+            i++;
             var pressedkey = Console.ReadKey(true).Key;
             
             if (_keyActions.TryGetValue(pressedkey, out var action))
@@ -125,6 +129,10 @@ public class Game
             _gameRender.DrawCombat(_player, enemy,_map.Width);
         
             var key = Console.ReadKey(true).Key;
+            if (ConsoleKey.F == key)
+            {
+                return;
+            }
         
             if (!_combatActions.TryGetValue(key, out var visitors)) continue;
         
@@ -147,6 +155,7 @@ public class Game
         {
             enemy.Notify(new EnemyDiedEvent(enemy));
             enemy.Unsubscribe(enemy.Species);
+            _map.removeEnemy(enemy);
             enemy.Species.RemoveMember(enemy);
             enemyField.SetEnemy(null);
             GameLog.Instance.Log("Player defeated enemy (" + enemy.Name + ")");

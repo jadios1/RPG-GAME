@@ -24,7 +24,17 @@ public class MagicalTheme : IDungeonTheme
 
     public List<Enemy> GetEnemies()
     {
-        return new List<Enemy>() { new Enemy("Wizard", 150, 15, 10, new SkeletonSpecies()), new Enemy("Mage", 100, 20, 5, new GoblinSpecies()) };
+        var goblinspecies = new GoblinSpecies();
+        var sceletonspecies = new SkeletonSpecies();
+        List<Enemy> enemies = new List<Enemy>
+        {
+            new Enemy("Goblin Mage", 50, 20, 0,goblinspecies),
+            new Enemy("Sceleton Mage", 50, 20, 0,sceletonspecies),
+            new Enemy("Sceleton Wizard", 100, 5, 10,goblinspecies),
+            new Enemy("Sceleton Wizard", 20, 3, 10 ,sceletonspecies)
+        };
+
+        return enemies;
     }
 
     public void Generate(DungeonBuilder builder)

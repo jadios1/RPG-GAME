@@ -20,7 +20,6 @@ public class GoblinSpecies : ISpecies ,IEventVisitor
         {
             member.Attack -= 3;
             member.Armor -= 2;
-            GameLog.Instance.Log($"Goblin weakened: attack={member.Attack} armor={member.Armor}");
 
         }
     }
