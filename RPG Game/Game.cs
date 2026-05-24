@@ -155,8 +155,9 @@ public class Game
         {
             enemy.Notify(new EnemyDiedEvent(enemy));
             enemy.Unsubscribe(enemy.Species);
-            _map.removeEnemy(enemy);
+            _map.RemoveEnemy(enemy);
             enemy.Species.RemoveMember(enemy);
+            _map.Unsubscribe(enemy);
             enemyField.SetEnemy(null);
             GameLog.Instance.Log("Player defeated enemy (" + enemy.Name + ")");
         }

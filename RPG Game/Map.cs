@@ -15,7 +15,7 @@ public class Map : IObservable
     {
         Height = height;
         Width = width;
-        enemies = new List<Enemy>();
+        _enemies = new List<Enemy>();
         _fields = new Field[width, height];
         DungeonBuilder builder = new DungeonBuilder(this);
         SetField(player.X,player.Y,new EmptyField());
@@ -37,7 +37,7 @@ public class Map : IObservable
         {
             builder.PlaceEnemyRandom(enemie);
             Subscribe(enemie);
-            enemies.Add(enemie);
+            _enemies.Add(enemie);
         }
 
         builder.PlaceItemRandom(theme.GetArtifact());
@@ -60,7 +60,7 @@ public class Map : IObservable
     public int Height { get; private set; }
     public int Width { get; private set; }
 
-    private List<Enemy> enemies;
+    private List<Enemy> _enemies;
 
     public bool TryMovePlayer(Player player,int dx,int dy)
     {
@@ -81,7 +81,7 @@ public class Map : IObservable
         int[] dy = { 1, -1, 0, 0 };
         Random rnd = new Random();
     
-        foreach (var enemy in enemies)
+        foreach (var enemy in _enemies)
         {
             int dir = rnd.Next(4);
             int nx = enemy.X + dx[dir];
@@ -131,9 +131,9 @@ public class Map : IObservable
         return null;
     }
 
-    public void removeEnemy(Enemy enemy)
+    public void RemoveEnemy(Enemy enemy)
     {
-        enemies.Remove(enemy);
+        _enemies.Remove(enemy);
     }
 
     public int GetDistance(int x1, int y1, int x2, int y2)
