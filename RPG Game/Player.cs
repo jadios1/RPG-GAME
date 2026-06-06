@@ -1,12 +1,20 @@
+using RPG_Game.Events;
+using RPG_Game.Fields;
+using RPG_Game.Items;
+using RPG_Game.Logger;
+using RPG_Game.Visitors;
+
 namespace RPG_Game;
 
 public class Player : IDisplayable
 {
-    public Player()
+    public Player(string name,int Id)
     {
-        X = 2;
-        Y = 2;
-        Strength = 0;
+        Name = name;
+        Id = Id;
+        X = 20;
+        Y = 10;
+        Strength = 10;
         Dexterity = 0;
         Luck = 0;
         Aggression = 0;
@@ -23,6 +31,9 @@ public class Player : IDisplayable
 
     public int SelectedSlot;
     public List<Item> Inventory { get; }
+    
+    public string Name { get; set; }
+    public int Id { get; private set; } 
     public int X{ get;private set; }
     public int Y{ get;private set; }
     public int Strength { get; set; }
@@ -43,7 +54,7 @@ public class Player : IDisplayable
         Y += dy;
     }
 
-    public void PutIntoInventory(Item item,Field field)
+    public void PutIntoInventory(Item? item,Field field)
     {
 
         item.OnPickup(this,field);
@@ -63,6 +74,8 @@ public class Player : IDisplayable
     {
         if (hand.IsEmpty())
         {
+            GameLog.Instance.Log(item.GetName() + " equipped!");
+            
             hand.Hold(item);
             Inventory.Remove(item);
         }
@@ -72,6 +85,7 @@ public class Player : IDisplayable
     {
         if (LeftHand.IsEmpty() && RightHand.IsEmpty())
         {
+            GameLog.Instance.Log(item.GetName() + " equipped!");
             LeftHand.Hold(item);
             RightHand.Hold(item);
             Inventory.Remove(item);
@@ -82,7 +96,12 @@ public class Player : IDisplayable
     {
         if (Inventory.Count < 3)
         {
-            if (hand.HeldItem != null) Inventory.Add(hand.HeldItem);
+
+            if (hand.HeldItem != null)
+            {
+                GameLog.Instance.Log(hand.HeldItem.GetName() + " unequipped!");
+                Inventory.Add(hand.HeldItem);
+            }
 
             LeftHand.Clear();
             RightHand.Clear();
@@ -94,7 +113,11 @@ public class Player : IDisplayable
     {
         if (Inventory.Count < 3)
         {
-            if (hand.HeldItem != null) Inventory.Add(hand.HeldItem);
+            if (hand.HeldItem != null)
+            {
+                GameLog.Instance.Log(hand.HeldItem.GetName() + " unequipped!");
+                Inventory.Add(hand.HeldItem);
+            }
             hand.Clear();
         }
         
@@ -115,29 +138,33 @@ public class Player : IDisplayable
     {
         var itemToDrop = this.SelectedItem();
         if (itemToDrop != null)
-        { 
+        {
+            itemToDrop.OnDrop(this);
             _map.GetField(X, Y).PutItem(itemToDrop);
             this.RemoveFromInventory(this.SelectedSlot);
             return true;
         }
-
         return false;
     }
 
     public bool LeftHandPickup()
     {
+        var item = this.SelectedItem();
+
         if (LeftHand.IsEmpty())
         {
-            var item = this.SelectedItem();
             if (item != null)
             {
                 item.TryEquip(this,LeftHand);
+ 
+
                 return true;
             }
         }
         else
         {
             LeftHand.HeldItem?.TryRemove(this,LeftHand);
+
             return true;
         }
 
@@ -147,18 +174,23 @@ public class Player : IDisplayable
 
     public bool RightHandPickup()
     {
+        var item = SelectedItem();
+
         if (RightHand.IsEmpty())
         {
-            var item = SelectedItem();
             if (item != null)
             {
                 item.TryEquip(this,RightHand);
+       
+                
                 return true;
             }
         }
         else
         {
             RightHand.HeldItem?.TryRemove(this,RightHand);
+         
+
             return true;
         }
 
@@ -170,19 +202,40 @@ public class Player : IDisplayable
     {
         if (!map.GetField(X, Y).IsEmpty())
         {
+            string itemName = map.GetField(X, Y).GetItem()?.GetName() ?? "unknown item";
+            
+            int range = map.GetField(X, Y).GetItem()?.GetSoundRange() ?? 0;
+            if (range > 0)
+            {
+                map.Notify(new SoundEvent(X,Y,range,itemName));
+            }
+
             PutIntoInventory(map.GetField(X, Y).GetItem(), map.GetField(X, Y));
+            GameLog.Instance.Log("Player picked up " + itemName);
             return true;
         }
 
         return false;
 
 
+    } 
+    public int CalculateAttackDamage(IAttackVisitor visitor)
+    {
+        int left = LeftHand.HeldItem?.AcceptAttack(visitor, this) ?? 0;
+        int right = RightHand.HeldItem?.AcceptAttack(visitor, this) ?? 0;
+        return left + right;
     }
-    
+
+    public int CalculateDefense(IDefenseVisitor visitor)
+    {
+        int left = LeftHand.HeldItem?.AcceptDefense(visitor, this) ?? 0;
+        int right = RightHand.HeldItem?.AcceptDefense(visitor, this) ?? 0;
+        return left + right;
+    }
     
     public char GetSymbol()
     {
-        return '¶';
+        return Id.ToString()[0];
     }
     
     

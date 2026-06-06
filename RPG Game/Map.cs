@@ -1,30 +1,58 @@
+using RPG_Game.Decorators;
+using RPG_Game.Events;
+using RPG_Game.Fields;
+using RPG_Game.Items;
+using RPG_Game.Items.Weapon;
+using RPG_Game.Logger;
+using RPG_Game.Themes;
+
 namespace RPG_Game;
 
-public class Map
+public class Map : IObservable
 {
-    public Map(int height,int width,Player player)
+    
+    public Map(int height,int width,Player player,IDungeonTheme theme)
     {
         Height = height;
         Width = width;
+        _enemies = new List<Enemy>();
         _fields = new Field[width, height];
         DungeonBuilder builder = new DungeonBuilder(this);
-        
-
-        builder.GenerateEmpty();
-        PlaceItemRandom();
-        PlaceItemRandom();
-        PlaceItemRandom();
-        PlaceItemRandom();
-        PlaceWeaponRandom();
-        PlaceWeaponRandom();
-        PlaceWeaponRandom();
-
         SetField(player.X,player.Y,new EmptyField());
+        builder.GetPlayerSpawn(player.X,player.Y);
+        theme.Generate(builder);
+        builder.ConnectRooms();
+        foreach (var weapon in theme.GetWeaponPool())
+        {
+            builder.PlaceItemRandom(weapon);            
+        }
+        
+        foreach (var item in theme.GetItemPool())
+        {
+            builder.PlaceItemRandom(item);
+        
+        }
+        
+        foreach (var enemie in theme.GetEnemies())
+        {
+            builder.PlaceEnemyRandom(enemie);
+            Subscribe(enemie);
+            _enemies.Add(enemie);
+        }
 
+        builder.PlaceItemRandom(theme.GetArtifact());
     }
 
 
+    private List<IObserver> _observers = new ();
 
+    public void Subscribe(IObserver observer) => _observers.Add(observer);
+    public void Unsubscribe(IObserver observer) => _observers.Remove(observer);
+    public void Notify(IEvent gameEvent)
+    {
+        foreach (var obs in _observers)
+            obs.OnNotify(gameEvent);
+    }
 
     
     
@@ -32,6 +60,9 @@ public class Map
     public int Height { get; private set; }
     public int Width { get; private set; }
 
+    private List<Enemy> _enemies;
+
+    public IReadOnlyList<Enemy> Enemies => _enemies;
 
     public bool TryMovePlayer(Player player,int dx,int dy)
     {
@@ -41,11 +72,33 @@ public class Map
             return true;
         }
 
+        if(!_fields[player.X + dx, player.Y + dy].HasEnemy()) GameLog.Instance.Log("Walking into wall!");
         return false;
 
     }
 
+    public void MoveEnemies()
+    {
+        int[] dx = { 0, 0, 1, -1 };
+        int[] dy = { 1, -1, 0, 0 };
+        Random rnd = new Random();
     
+        foreach (var enemy in _enemies)
+        {
+            int dir = rnd.Next(4);
+            int nx = enemy.X + dx[dir];
+            int ny = enemy.Y + dy[dir];
+
+            if (GetField(nx, ny).IsPassable())
+            {
+                GetField(enemy.X, enemy.Y).SetEnemy(null);
+                enemy.X = nx;
+                enemy.Y = ny;
+                GetField(nx, ny).SetEnemy(enemy);
+            }
+        }
+
+    }
 
     public Field GetField(int x,int y)
     {
@@ -56,47 +109,63 @@ public class Map
     {
         _fields[x, y] = field;
     }
-
-    public void PlaceWall(int x,int y)
-    {
-        _fields[x, y] = new Wall();
-    }
-
-    private void PlaceItem(int x, int y, Item item)
-    {
-        _fields[x,y].PutItem(item);
-    }
     
-    
-    public void PlaceItemRandom()
+    public Enemy? GetAdjacentEnemy(int x, int y)
     {
-        Random rnd = new Random();
-        List<Item> items = new List<Item>{ new Coin(), new Junk(), new Clock(), new Book(), new Gold() };
-        Item randomItem = items[rnd.Next(5)];
-        int x = rnd.Next(Width);
-        int y = rnd.Next(Height);
-        while (!GetField(x, y).IsEmpty())
+        int[] dx = { 0, 0, 1, -1 };
+        int[] dy = { 1, -1, 0, 0 };
+        for (int i = 0; i < 4; i++)
         {
-            x = rnd.Next(Width);
-            y = rnd.Next(Height);
+            var field = GetField(x + dx[i], y + dy[i]);
+            if (field.HasEnemy()) return field.GetEnemy();
         }
-        _fields[x,y].PutItem(randomItem);
-        
+        return null;
     }
-    
-    public void PlaceWeaponRandom()
+    public Field? GetAdjacentEnemyField(int x, int y)
     {
-        Random rnd = new Random();
-        List<Weapon> weapons = new List<Weapon>{ new DoubleHandedWeapon(), new Axe(), new SingleHandedWeapon() };
-        Item randomItem = weapons[rnd.Next(3)];
-        int x = rnd.Next(Width);
-        int y = rnd.Next(Height);
-        while (!GetField(x, y).IsEmpty())
+        int[] dx = { 0, 0, 1, -1 };
+        int[] dy = { 1, -1, 0, 0 };
+        for (int i = 0; i < 4; i++)
         {
-            x = rnd.Next(Width);
-            y = rnd.Next(Height);
+            var field = GetField(x + dx[i], y + dy[i]);
+            if (field.HasEnemy()) return field;
         }
-        _fields[x,y].PutItem(randomItem);
-        
+        return null;
+    }
+
+    public void RemoveEnemy(Enemy enemy)
+    {
+        _enemies.Remove(enemy);
+    }
+
+    public int GetDistance(int x1, int y1, int x2, int y2)
+    {
+        if (!GetField(x1, y1).IsPassable() && !GetField(x1,y1).HasEnemy()) return int.MaxValue;
+    
+        var visited = new bool[Width, Height];
+        var queue = new Queue<(int x, int y, int dist)>();
+        queue.Enqueue((x1, y1, 0));
+        visited[x1, y1] = true;
+
+        int[] dx = { 0, 0, 1, -1 };
+        int[] dy = { 1, -1, 0, 0 };
+
+        while (queue.Count > 0)
+        {
+            var (cx, cy, dist) = queue.Dequeue();
+            if (cx == x2 && cy == y2) return dist;
+
+            for (int i = 0; i < 4; i++)
+            {
+                int nx = cx + dx[i];
+                int ny = cy + dy[i];
+                if (nx < 0 || nx >= Width || ny < 0 || ny >= Height) continue;
+                if (visited[nx, ny]) continue;
+                if (!GetField(nx, ny).IsPassable() && !(nx == x2 && ny == y2)) continue;
+                visited[nx, ny] = true;
+                queue.Enqueue((nx, ny, dist + 1));
+            }
+        }
+        return int.MaxValue;
     }
 }

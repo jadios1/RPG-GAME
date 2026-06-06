@@ -1,3 +1,5 @@
+using RPG_Game.Logger;
+
 namespace RPG_Game;
 
 public class GameRender
@@ -33,10 +35,10 @@ public class GameRender
 
             Console.WriteLine("Currently standing on:");
             Console.SetCursorPosition(width+1, 6);
-            Console.WriteLine(map.GetField(player.X,player.Y).GetItem().GetName().PadRight(20));
+            Console.WriteLine(map.GetField(player.X,player.Y).GetItem()?.GetName().PadRight(20));
             Console.SetCursorPosition(width+1, 7);
 
-            Console.WriteLine(map.GetField(player.X, player.Y).GetItem().Description().PadRight(20));
+            Console.WriteLine(map.GetField(player.X, player.Y).GetItem()?.Description().PadRight(20));
         }
         else
         {
@@ -67,29 +69,29 @@ public class GameRender
         Console.WriteLine("Player stats:");
         
         Console.SetCursorPosition(width+1, 14);
-        Console.WriteLine("Gold: " + player.Gold);
+        Console.WriteLine("Gold: " + player.Gold + "".PadRight(4));
         
         Console.SetCursorPosition(width+1, 15);
-        Console.WriteLine("Coins: " + player.Coins);
+        Console.WriteLine("Coins: " + player.Coins + "".PadRight(4));
         
         Console.SetCursorPosition(width+1, 16);
-        Console.WriteLine("Health: " + player.Health);
+        Console.WriteLine("Health: " + player.Health + "".PadRight(5));
         
         Console.SetCursorPosition(width+1, 17);
-        Console.WriteLine("Dexterity: " + player.Dexterity);
+        Console.WriteLine("Dexterity: " + player.Dexterity + "".PadRight(4)) ;
         
         Console.SetCursorPosition(width+1, 18);
-        Console.WriteLine("Aggresion: " + player.Aggression);
+        Console.WriteLine("Aggresion: " + player.Aggression + "".PadRight(4));
 
         
         Console.SetCursorPosition(width+1, 19);
-        Console.WriteLine("Luck: " + player.Luck);
+        Console.WriteLine("Luck: " + player.Luck + "".PadRight(3));
         
         Console.SetCursorPosition(width+1, 20);
-        Console.WriteLine("Strength: " + player.Strength);
+        Console.WriteLine("Strength: " + player.Strength + "".PadRight(4));
         
         Console.SetCursorPosition(width+1, 21);
-        Console.WriteLine("Wisdom: " + player.Wisdom);
+        Console.WriteLine("Wisdom: " + player.Wisdom + "".PadRight(4));
         Console.SetCursorPosition(0, map.Height+1);
 
         Console.WriteLine("W/A/S/D - move");
@@ -151,13 +153,25 @@ public class GameRender
             Console.WriteLine("X - equip right");
             Console.ResetColor();
         }
+        var adjacentEnemy = map.GetAdjacentEnemy(player.X, player.Y);
+        if (adjacentEnemy != null)
+        {
+            Console.WriteLine("F - fight");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("F - fight");
+            Console.ResetColor();
+        }
         Console.WriteLine("1/2/3 - select slot");
+        DrawLog();
     }
     
     
     public void CannotUse(Map map,bool work)
     {
-        if (work == true)
+        if (work)
         {
             Console.SetCursorPosition(0, map.Height);
             Console.WriteLine("Cannot use that key!");   
@@ -170,7 +184,7 @@ public class GameRender
 
         }
     }
-    public void DrawMap(Map map,int height,int width,Player player)
+    public void DrawMap(Map map, int height, int width, Dictionary<int, Player> players)
     {
         Console.SetCursorPosition(0, 0);
 
@@ -178,9 +192,11 @@ public class GameRender
         {
             for (int x = 0; x < width; x++)
             {
-                if (player.X == x && player.Y == y)
+                var playerOnTile = players.Values.FirstOrDefault(p => p.X == x && p.Y == y);
+            
+                if (playerOnTile != null)
                 {
-                    Console.Write(player.GetSymbol());
+                    Console.Write(playerOnTile.GetSymbol());
                 }
                 else
                 {
@@ -189,5 +205,64 @@ public class GameRender
             }
             Console.WriteLine();
         }
+    }    
+    
+    public void DrawCombat(Player player, Enemy enemy, int width)
+    {
+        DrawLog();
+        Console.SetCursorPosition(width+1, 0);
+        Console.WriteLine("=== COMBAT ===");
+        Console.SetCursorPosition(width+1, 1);
+        Console.WriteLine($"Enemy: {enemy.Name}".PadRight(10));
+        Console.SetCursorPosition(width+1, 2);
+        Console.WriteLine($"HP: {enemy.Health}  Armor: {enemy.Armor}".PadRight(25));
+        Console.SetCursorPosition(width+1, 3);
+        Console.WriteLine($"Attack: {enemy.Attack}".PadRight(20));
+        Console.SetCursorPosition(width+1, 5);
+        Console.WriteLine($"Your HP: {player.Health}".PadRight(25));
+        Console.SetCursorPosition(width+1, 7);
+        Console.WriteLine("1 - Normal attack");
+        Console.SetCursorPosition(width+1, 8);
+        Console.WriteLine("2 - Stealth attack");
+        Console.SetCursorPosition(width+1, 9);
+        Console.WriteLine("3 - Magical attack");
+
+    }
+
+    public void DrawLog()
+    {
+        var recentLogs = GameLog.Instance.GetRecent(3);
+        Console.SetCursorPosition(41, 23);
+        Console.WriteLine("Recent Logs:".PadRight(50));
+        for (int i = 0; i < 3; i++)
+        {
+            Console.SetCursorPosition(41, i + 24);
+            Console.WriteLine(i < recentLogs.Count ? recentLogs[i].PadRight(50) : "".PadRight(60));
+        }
+
+    }
+
+    public bool DrawFullLog()
+    {
+        Console.Clear();
+        var fullLog = GameLog.Instance.GetAll();
+        foreach (var log in fullLog)
+            Console.WriteLine(log);
+        Console.WriteLine("\nPress any key to return...");
+        Console.ReadKey(true);
+        Console.Clear();
+        return true;
+
+    }
+
+    public void DrawGameOver()
+    {
+        Console.Clear();
+        Console.SetCursorPosition(0, 0);
+        Console.WriteLine("GAME OVER");
+        Console.WriteLine(GameLog.Instance.FilePath);
+        Console.ReadKey(true);
+        Environment.Exit(0);
+
     }
 }
