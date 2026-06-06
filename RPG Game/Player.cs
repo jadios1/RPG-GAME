@@ -8,9 +8,10 @@ namespace RPG_Game;
 
 public class Player : IDisplayable
 {
-    public Player(string name)
+    public Player(string name,int Id)
     {
         Name = name;
+        Id = Id;
         X = 20;
         Y = 10;
         Strength = 10;
@@ -32,6 +33,7 @@ public class Player : IDisplayable
     public List<Item> Inventory { get; }
     
     public string Name { get; set; }
+    public int Id { get; private set; } 
     public int X{ get;private set; }
     public int Y{ get;private set; }
     public int Strength { get; set; }
@@ -233,7 +235,7 @@ public class Player : IDisplayable
     
     public char GetSymbol()
     {
-        return '¶';
+        return Id.ToString()[0];
     }
     
     

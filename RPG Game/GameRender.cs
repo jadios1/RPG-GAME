@@ -184,7 +184,7 @@ public class GameRender
 
         }
     }
-    public void DrawMap(Map map,int height,int width,Player player)
+    public void DrawMap(Map map, int height, int width, Dictionary<int, Player> players)
     {
         Console.SetCursorPosition(0, 0);
 
@@ -192,9 +192,11 @@ public class GameRender
         {
             for (int x = 0; x < width; x++)
             {
-                if (player.X == x && player.Y == y)
+                var playerOnTile = players.Values.FirstOrDefault(p => p.X == x && p.Y == y);
+            
+                if (playerOnTile != null)
                 {
-                    Console.Write(player.GetSymbol());
+                    Console.Write(playerOnTile.GetSymbol());
                 }
                 else
                 {
@@ -203,8 +205,7 @@ public class GameRender
             }
             Console.WriteLine();
         }
-    }
-    
+    }    
     
     public void DrawCombat(Player player, Enemy enemy, int width)
     {

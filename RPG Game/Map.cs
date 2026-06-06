@@ -62,6 +62,8 @@ public class Map : IObservable
 
     private List<Enemy> _enemies;
 
+    public IReadOnlyList<Enemy> Enemies => _enemies;
+
     public bool TryMovePlayer(Player player,int dx,int dy)
     {
         if (_fields[player.X + dx, player.Y + dy].IsPassable())
@@ -107,7 +109,7 @@ public class Map : IObservable
     {
         _fields[x, y] = field;
     }
-
+    
     public Enemy? GetAdjacentEnemy(int x, int y)
     {
         int[] dx = { 0, 0, 1, -1 };
