@@ -19,9 +19,8 @@ public class Controller
         };
     }
 
-    public void HandleInput(Model model)
+    public void HandleInput(Model model,ConsoleKey pressedKey)
     {
-        var pressedKey = Console.ReadKey(true).Key;
 
         if (model.ShowFullLog)
         {

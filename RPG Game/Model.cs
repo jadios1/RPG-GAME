@@ -17,6 +17,9 @@ public class Model
     public int LocalPlayerId { get; private set; }
     public Player LocalPlayer => Players[LocalPlayerId];
     
+    public int ActivePlayerId { get; set; }
+    public Player ActivePlayer => Players[ActivePlayerId];
+    
     public bool IsGameOver { get; private set; } = false;
     public bool ShowFullLog { get; set; } = false;
     public bool IsInCombat { get; private set; } = false;
@@ -32,12 +35,24 @@ public class Model
         
         Players = new Dictionary<int, Player>();
         LocalPlayerId = 1;
+        ActivePlayerId = 1;
         Players[LocalPlayerId] = new Player(playername, LocalPlayerId);
         
         var themes = new List<IDungeonTheme> { new MagicalTheme(), new LibraryTheme(), new BossTheme() };
         Theme = themes[new Random().Next(themes.Count)];
         
         Map = new Map(20, 40, LocalPlayer, Theme);
+    }
+
+    public void AddNetworkPlayer(int id)
+    {
+        if (!Players.ContainsKey(id))
+        {
+            Players[id] = new Player($"Player {id}", id);
+            
+            Players[id].X = LocalPlayer.X + 1;
+            Players[id].Y = LocalPlayer.Y;
+        }
     }
     
     public void Update()
@@ -60,25 +75,25 @@ public class Model
         IsGameOver = true;
     }
 
-    public bool PickUpItem() => LocalPlayer.PickUpItem(Map);
-    public bool MovePlayer(int dx, int dy) => Map.TryMovePlayer(LocalPlayer, dx, dy);
-    public bool DropItem() => LocalPlayer.DropItem(Map);
-    public bool EquipLeft() => LocalPlayer.LeftHandPickup();
-    public bool EquipRight() => LocalPlayer.RightHandPickup();
+    public bool PickUpItem() => ActivePlayer.PickUpItem(Map);
+    public bool MovePlayer(int dx, int dy) => Map.TryMovePlayer(ActivePlayer, dx, dy);
+    public bool DropItem() => ActivePlayer.DropItem(Map);
+    public bool EquipLeft() => ActivePlayer.LeftHandPickup();
+    public bool EquipRight() => ActivePlayer.RightHandPickup();
 
     public bool ChangeSlot(int selected)
     {
-        LocalPlayer.SelectedSlot = selected;
+        ActivePlayer.SelectedSlot = selected;
         return true;
     }
 
     public bool StartCombat()
     {
-        var enemy = Map.GetAdjacentEnemy(LocalPlayer.X, LocalPlayer.Y);
+        var enemy = Map.GetAdjacentEnemy(ActivePlayer.X, ActivePlayer.Y);
         if (enemy != null) 
         {
             CurrentEnemy = enemy;
-            _currentEnemyField = Map.GetAdjacentEnemyField(LocalPlayer.X, LocalPlayer.Y);
+            _currentEnemyField = Map.GetAdjacentEnemyField(ActivePlayer.X, ActivePlayer.Y);
             IsInCombat = true;
             return true;
         }
@@ -89,22 +104,31 @@ public class Model
     {
         if (!IsInCombat || CurrentEnemy == null) return;
 
-        int playerDamage = LocalPlayer.CalculateAttackDamage(attackVisitor);
-        int playerDefense = LocalPlayer.CalculateDefense(defenseVisitor);
+        int playerDamage = ActivePlayer.CalculateAttackDamage(attackVisitor);
+        int playerDefense = ActivePlayer.CalculateDefense(defenseVisitor);
         
         int damageToEnemy = Math.Max(0, playerDamage - CurrentEnemy.Armor);
         int damageToPlayer = Math.Max(0, CurrentEnemy.Attack - playerDefense);
         
-        GameLog.Instance.Log($"Player dealt {damageToEnemy}DMG to enemy ({CurrentEnemy.Name})");
-        GameLog.Instance.Log($"Enemy dealt {damageToPlayer}DMG to player ({LocalPlayer.Name})");
+        GameLog.Instance.Log($"{ActivePlayer.Name} dealt {damageToEnemy}DMG to enemy ({CurrentEnemy.Name})");
+        GameLog.Instance.Log($"Enemy dealt {damageToPlayer}DMG to {ActivePlayer.Name}");
 
         CurrentEnemy.Health -= damageToEnemy;
-        LocalPlayer.Health -= damageToPlayer;
+        ActivePlayer.Health -= damageToPlayer;
 
-        if (CurrentEnemy.Health <= 0 || LocalPlayer.Health <= 0)
+        if (CurrentEnemy.Health <= 0 || ActivePlayer.Health <= 0)
         {
             EndCombat();
         }
+    }
+
+    public void FleeCombat()
+    {
+        if (!IsInCombat) return;
+
+        GameLog.Instance.Log($"Player ({ActivePlayer.Name}) fled from combat!");
+        IsInCombat = false;
+        CurrentEnemy = null;
     }
 
     private void EndCombat()
@@ -124,18 +148,10 @@ public class Model
         CurrentEnemy = null;
         _currentEnemyField = null;
         
-        if (LocalPlayer.Health <= 0)
+        if (ActivePlayer.Health <= 0 && ActivePlayer.Id == LocalPlayerId)
         {
-            GameLog.Instance.Log($"Player ({LocalPlayer.Name}) Died!");
+            GameLog.Instance.Log($"Player ({ActivePlayer.Name}) Died!");
             SetGameOver();
         }
-    }
-    public void FleeCombat()
-    {
-        if (!IsInCombat) return;
-
-        GameLog.Instance.Log($"Player ({LocalPlayer.Name}) fled from combat!");
-        IsInCombat = false;
-        CurrentEnemy = null;
     }
 }
