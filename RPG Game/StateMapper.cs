@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using RPG_Game;
 
 namespace RPG_Game;
 
@@ -29,6 +28,13 @@ public static class StateMapper
         foreach (var kvp in model.Players)
         {
             var p = kvp.Value;
+            var field = model.Map.GetField(p.X, p.Y);
+            var itemOnField = field.IsEmpty() ? null : field.GetItem();
+            var adjacentEnemy = model.Map.GetAdjacentEnemy(p.X, p.Y);
+            
+            bool isFighting = model.PlayerCombats.ContainsKey(p.Id);
+            var combatEnemy = isFighting ? model.PlayerCombats[p.Id] : null;
+
             dto.Players[kvp.Key] = new PlayerDTO
             {
                 Id = p.Id,
@@ -38,10 +44,33 @@ public static class StateMapper
                 Y = p.Y,
                 Health = p.Health,
                 Gold = p.Gold,
+                Coins = p.Coins,
+                Strength = p.Strength,
+                Dexterity = p.Dexterity,
+                Wisdom = p.Wisdom,
+                Aggression = p.Aggression,
+                Luck = p.Luck,
                 SelectedSlot = p.SelectedSlot,
                 LeftHandName = p.LeftHand.HeldItem?.GetName() ?? "",
                 RightHandName = p.RightHand.HeldItem?.GetName() ?? "",
-                InventoryNames = p.Inventory.Select(i => i.GetName()).ToList()
+                InventoryNames = p.Inventory.Select(i => i.GetName()).ToList(),
+                
+                IsStandingOnItem = !field.IsEmpty(),
+                StandingOnItemName = itemOnField?.GetName() ?? "",
+                StandingOnItemDesc = itemOnField?.Description() ?? "",
+                HasSelectedItem = p.SelectedItem() != null,
+                CanEquipLeft = (p.SelectedItem() != null && p.SelectedItem()!.IsEquipable()) || !p.LeftHand.IsEmpty(),
+                CanEquipRight = (p.SelectedItem() != null && p.SelectedItem()!.IsEquipable()) || !p.RightHand.IsEmpty(),
+                CanFight = adjacentEnemy != null,
+                
+                IsInCombat = isFighting,
+                CombatEnemy = combatEnemy != null ? new EnemyDTO 
+                { 
+                    Name = combatEnemy.Name, 
+                    Health = combatEnemy.Health, 
+                    Armor = combatEnemy.Armor,
+                    Attack = combatEnemy.Attack
+                } : null
             };
         }
 
@@ -59,15 +88,7 @@ public static class StateMapper
                 Attack = enemy.Attack
             });
         }
-        dto.IsInCombat = model.IsInCombat;
-        dto.CurrentEnemy = model.CurrentEnemy != null ? new EnemyDTO 
-        { 
-            Name = model.CurrentEnemy.Name, 
-            Health = model.CurrentEnemy.Health, 
-            Armor = model.CurrentEnemy.Armor,
-            Attack = model.CurrentEnemy.Attack
-        } : null;
-
+        
         return dto;
     }
 }

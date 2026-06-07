@@ -17,8 +17,8 @@ public class GameServer
     
     public Action<int> OnClientConnected { get; set; } 
     
-    private int _nextPlayerId = 2;
-
+    private int _nextPlayerId = 1; 
+    
     public GameServer(int port, Action<int, ConsoleKey> onInputReceived)
     {
         _port = port;

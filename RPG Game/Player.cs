@@ -11,7 +11,7 @@ public class Player : IDisplayable
     public Player(string name,int Id)
     {
         Name = name;
-        Id = Id;
+        this.Id = Id;
         X = 20;
         Y = 10;
         Strength = 10;

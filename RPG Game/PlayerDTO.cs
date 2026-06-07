@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace RPG_Game;
 
 public class PlayerDTO
@@ -20,4 +22,15 @@ public class PlayerDTO
     public string LeftHandName { get; set; } = string.Empty;
     public string RightHandName { get; set; } = string.Empty;
     public int SelectedSlot { get; set; }
+
+    public bool IsStandingOnItem { get; set; }
+    public string StandingOnItemName { get; set; } = string.Empty;
+    public string StandingOnItemDesc { get; set; } = string.Empty;
+    public bool HasSelectedItem { get; set; }
+    public bool CanEquipLeft { get; set; }
+    public bool CanEquipRight { get; set; }
+    public bool CanFight { get; set; }
+    
+    public bool IsInCombat { get; set; }
+    public EnemyDTO? CombatEnemy { get; set; }
 }
