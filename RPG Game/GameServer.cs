@@ -36,7 +36,7 @@ public class GameServer
     {
         while (true)
         {
-            if (_clients.Count >= 8) 
+            if (_clients.Count >= 9)
             {
                 await Task.Delay(1000);
                 continue;
@@ -46,9 +46,12 @@ public class GameServer
             _clients.Add(client);
             int playerId = _nextPlayerId++;
 
+            var writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
+            await writer.WriteLineAsync($"ID:{playerId}");
+
             OnClientConnected?.Invoke(playerId);
 
-            _ = Task.Run(() => HandleClientAsync(client, playerId));
+            Task.Run(() => HandleClientAsync(client, playerId));
         }
     }
 
@@ -72,7 +75,6 @@ public class GameServer
                 }
             }
         }
-        catch (Exception) { }
         finally
         {
             _clients.Remove(client);

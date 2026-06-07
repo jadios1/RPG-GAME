@@ -7,8 +7,9 @@ public class GameStateDTO
     public List<EnemyDTO> Enemies { get; set; } = new();
     public List<string> RecentLogs { get; set; } = new();
     public bool IsGameOver { get; set; }
-    
+
     public bool IsInCombat { get; set; }
-    
+
     public EnemyDTO? CurrentEnemy { get; set; }
+
 }

@@ -40,11 +40,26 @@ public class ClientRunner : IGameRunner
         }
 
         var stream = tcpClient.GetStream();
+
+
         var reader = new StreamReader(stream);
         var writer = new StreamWriter(stream) { AutoFlush = true };
         var view = new GameRender();
-        
-        int myNetworkId = 2;
+
+
+        int myNetworkId = 1;
+        bool idReceived = false;
+
+        while (!idReceived)
+        {
+            string line = reader.ReadLine();
+            if (line != null && line.StartsWith("ID:"))
+            {
+                myNetworkId = int.Parse(line.Substring(3));
+                idReceived = true;
+            }
+        }
+
 
         Console.CursorVisible = false;
         Console.Clear();
@@ -61,15 +76,10 @@ public class ClientRunner : IGameRunner
                     if (!string.IsNullOrEmpty(json))
                     {
                         _latestState = JsonSerializer.Deserialize<GameStateDTO>(json, jsonOptions);
-                        
-                        if (_latestState != null && _latestState.Players.Keys.Any(id => id != 1))
-                        {
-                            myNetworkId = _latestState.Players.Keys.First(id => id != 1);
-                        }
                     }
                 }
             }
-            catch {}
+            catch { }
         });
 
         while (true)
@@ -80,17 +90,17 @@ public class ClientRunner : IGameRunner
 
                 view.DrawNetworkState(_latestState, myNetworkId);
 
-                if (_latestState.Players.TryGetValue(myNetworkId, out var myPlayer) && 
-                    myPlayer.IsInCombat && 
+                if (_latestState.Players.TryGetValue(myNetworkId, out var myPlayer) &&
+                    myPlayer.IsInCombat &&
                     myPlayer.CombatEnemy != null)
                 {
                     view.DrawCombatInterface(
-                        myPlayer.Name, 
-                        myPlayer.Health, 
-                        myPlayer.CombatEnemy.Name, 
-                        myPlayer.CombatEnemy.Health, 
-                        myPlayer.CombatEnemy.Armor, 
-                        myPlayer.CombatEnemy.Attack, 
+                        myPlayer.Name,
+                        myPlayer.Health,
+                        myPlayer.CombatEnemy.Name,
+                        myPlayer.CombatEnemy.Health,
+                        myPlayer.CombatEnemy.Armor,
+                        myPlayer.CombatEnemy.Attack,
                         _latestState.MapGrid[0].Length,
                         _latestState.RecentLogs
                     );
@@ -100,7 +110,7 @@ public class ClientRunner : IGameRunner
             if (Console.KeyAvailable)
             {
                 var key = Console.ReadKey(true).Key;
-                writer.WriteLine(key.ToString()); 
+                writer.WriteLine(key.ToString());
             }
 
             Thread.Sleep(50);

@@ -6,7 +6,7 @@ using RPG_Game.Visitors;
 
 namespace RPG_Game;
 
-public class Player : IDisplayable
+public class Player : IDisplayable ,IObserver, IEventVisitor
 {
     public Player(string name,int Id)
     {
@@ -46,7 +46,7 @@ public class Player : IDisplayable
     public int Coins{ get; set; }
     public Hand LeftHand;
     public Hand RightHand;
-
+    public Map? CurrentMap { get; set; }
 
     public void Move(int dx, int dy)
     {
@@ -237,8 +237,26 @@ public class Player : IDisplayable
     {
         return Id.ToString()[0];
     }
-    
-    
-    
-    
+
+    public void OnNotify(IEvent gameEvent)
+    {
+        gameEvent.Accept(this);
+    }
+
+    public void Visit(EnemyDiedEvent e)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Visit(SoundEvent e)
+    {
+        if (CurrentMap == null) return;
+
+        int dist = CurrentMap.GetDistance(X, Y, e.X, e.Y);
+
+        if (dist <= e.Range)
+        {
+            GameLog.Instance.Log($"[Sound] {e.Source} heard! Distance: {dist}. Source pos: ({e.X},{e.Y})");
+        }
+    }
 }

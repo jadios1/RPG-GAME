@@ -205,8 +205,34 @@ public class GameRender
             }
             Console.WriteLine();
         }
-    }    
-    
+    }
+
+    public void DrawServerUI(Model model)
+    {
+        Console.SetCursorPosition(model.Map.Width + 1, 0);
+        Console.WriteLine(" SERVER MONITOR ".PadRight(30));
+        Console.SetCursorPosition(model.Map.Width + 1, 1);
+        Console.WriteLine($"Connected Players: {model.Players.Count}/9".PadRight(30));
+
+        int yOffset = 3;
+        foreach (var p in model.Players.Values)
+        {
+            Console.SetCursorPosition(model.Map.Width + 1, yOffset++);
+            string combatStatus = model.PlayerCombats.ContainsKey(p.Id) ? "FIGHTING" : "IDLE";
+            Console.WriteLine($"P{p.Id}: {p.Name} | HP: {p.Health} | Status: {combatStatus}".PadRight(45));
+        }
+
+        Console.SetCursorPosition(41, 23);
+        Console.WriteLine("Recent Logs:".PadRight(50));
+        var recentLogs = GameLog.Instance.GetRecent(3);
+        for (int i = 0; i < 3; i++)
+        {
+            Console.SetCursorPosition(41, i + 24);
+            string logLine = i < recentLogs.Count ? recentLogs[i] : "";
+            Console.WriteLine(logLine.PadRight(60));
+        }
+    }
+
     public void DrawCombatInterface(string playerName, int playerHp, string enemyName, int enemyHp, int enemyArmor, int enemyAttack, int width, List<string> recentLogs)
     {
         for (int i = 0; i < 22; i++)

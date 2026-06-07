@@ -50,9 +50,7 @@ public class Controller
             case ConsoleKey.D2: actionSuccess = model.ChangeSlot(1); break;
             case ConsoleKey.D3: actionSuccess = model.ChangeSlot(2); break;
             case ConsoleKey.F: actionSuccess = model.StartCombat(); break;
-            case ConsoleKey.J: 
-                model.ShowFullLog = true; 
-                break;
+            case ConsoleKey.J: model.ShowFullLog = true; break;
             default:
                 GameLog.Instance.Log("Pressed unknown key!");
                 actionSuccess = false;

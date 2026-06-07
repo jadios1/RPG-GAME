@@ -45,7 +45,7 @@ IGameRunner runner;
 
 if (isServer)
 {
-    runner = new ServerRunner(config.PlayerName, port);
+    runner = new ServerRunner(port);
 }
 else
 {
