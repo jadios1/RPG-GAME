@@ -78,21 +78,22 @@ public class ClientRunner : IGameRunner
             {
                 if (_latestState.IsGameOver) break;
 
-                if (_latestState.IsInCombat)
+                view.DrawNetworkState(_latestState, myNetworkId);
+
+                if (_latestState.Players.TryGetValue(myNetworkId, out var myPlayer) && 
+                    myPlayer.IsInCombat && 
+                    myPlayer.CombatEnemy != null)
                 {
                     view.DrawCombatInterface(
-                        "Player 2", // lub nazwa z DTO
-                        _latestState.Players[myNetworkId].Health,
-                        _latestState.CurrentEnemy.Name,
-                        _latestState.CurrentEnemy.Health,
-                        _latestState.CurrentEnemy.Armor,
-                        _latestState.CurrentEnemy.Attack,
-                        _latestState.MapGrid[0].Length // Szerokość mapy z DTO
-                    );                
-                }
-                else
-                {
-                    view.DrawNetworkState(_latestState, myNetworkId);
+                        myPlayer.Name, 
+                        myPlayer.Health, 
+                        myPlayer.CombatEnemy.Name, 
+                        myPlayer.CombatEnemy.Health, 
+                        myPlayer.CombatEnemy.Armor, 
+                        myPlayer.CombatEnemy.Attack, 
+                        _latestState.MapGrid[0].Length,
+                        _latestState.RecentLogs
+                    );
                 }
             }
 

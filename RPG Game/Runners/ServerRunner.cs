@@ -63,14 +63,28 @@ public class ServerRunner : IGameRunner
             {
                 view.DrawFullLog();
             }
-            else if (model.IsInCombat && model.ActivePlayerId == model.LocalPlayerId) 
-            {
-                view.DrawCombatInterface(model.LocalPlayer.Name, model.LocalPlayer.Health, model.CurrentEnemy.Name, model.CurrentEnemy.Health, model.CurrentEnemy.Armor, model.CurrentEnemy.Attack, model.Map.Width);            
-            }
-            else
+            else 
             {
                 view.DrawMap(model.Map, model.Map.Height, model.Map.Width, model.Players);
-                view.Info(model.Map.Width, model.LocalPlayer, model.Map);
+
+                if (model.PlayerCombats.ContainsKey(model.LocalPlayerId))
+                {
+                    var myEnemy = model.PlayerCombats[model.LocalPlayerId];
+                    view.DrawCombatInterface(
+                        model.LocalPlayer.Name, 
+                        model.LocalPlayer.Health, 
+                        myEnemy.Name, 
+                        myEnemy.Health, 
+                        myEnemy.Armor, 
+                        myEnemy.Attack, 
+                        model.Map.Width,
+                        GameLog.Instance.GetRecent(3)
+                    );
+                }
+                else
+                {
+                    view.Info(model.Map.Width, model.LocalPlayer, model.Map);
+                }
             }
             
             if (Console.KeyAvailable)

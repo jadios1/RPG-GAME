@@ -77,14 +77,19 @@ public class Map : IObservable
 
     }
 
-    public void MoveEnemies()
+    public void MoveEnemies(IEnumerable<Enemy> ignoredEnemies = null)
     {
         int[] dx = { 0, 0, 1, -1 };
         int[] dy = { 1, -1, 0, 0 };
         Random rnd = new Random();
     
-        foreach (var enemy in _enemies)
+        var ignoreList = new List<Enemy>();
+        if (ignoredEnemies != null) ignoreList.AddRange(ignoredEnemies);
+
+        foreach (var enemy in _enemies.ToList())
         {
+            if (ignoreList.Contains(enemy)) continue;
+
             int dir = rnd.Next(4);
             int nx = enemy.X + dx[dir];
             int ny = enemy.Y + dy[dir];
@@ -97,9 +102,7 @@ public class Map : IObservable
                 GetField(nx, ny).SetEnemy(enemy);
             }
         }
-
     }
-
     public Field GetField(int x,int y)
     {
         return _fields[x, y];

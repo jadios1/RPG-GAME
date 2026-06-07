@@ -5,6 +5,7 @@ using RPG_Game.Themes;
 using RPG_Game.Visitors;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RPG_Game;
 
@@ -22,10 +23,11 @@ public class Model
     
     public bool IsGameOver { get; private set; } = false;
     public bool ShowFullLog { get; set; } = false;
-    public bool IsInCombat { get; private set; } = false;
     
-    public Enemy? CurrentEnemy { get; private set; }
-    private Field? _currentEnemyField;
+    public Dictionary<int, Enemy> PlayerCombats { get; private set; } = new();
+    
+    public bool IsInCombat => PlayerCombats.ContainsKey(ActivePlayerId);
+    public Enemy? CurrentEnemy => PlayerCombats.TryGetValue(ActivePlayerId, out var e) ? e : null;
     
     private int _turnCounter = 0;
 
@@ -34,8 +36,8 @@ public class Model
         IsGameOver = false;
         
         Players = new Dictionary<int, Player>();
-        LocalPlayerId = 1;
-        ActivePlayerId = 1;
+        LocalPlayerId = 0;
+        ActivePlayerId = 0;
         Players[LocalPlayerId] = new Player(playername, LocalPlayerId);
         
         var themes = new List<IDungeonTheme> { new MagicalTheme(), new LibraryTheme(), new BossTheme() };
@@ -49,7 +51,6 @@ public class Model
         if (!Players.ContainsKey(id))
         {
             Players[id] = new Player($"Player {id}", id);
-            
             Players[id].X = LocalPlayer.X + 1;
             Players[id].Y = LocalPlayer.Y;
         }
@@ -60,7 +61,7 @@ public class Model
         _turnCounter++;
         if (_turnCounter % 3 == 0)
         {
-            Map.MoveEnemies();
+            Map.MoveEnemies(PlayerCombats.Values);
         }
 
         if (LocalPlayer.Health <= 0)
@@ -90,11 +91,9 @@ public class Model
     public bool StartCombat()
     {
         var enemy = Map.GetAdjacentEnemy(ActivePlayer.X, ActivePlayer.Y);
-        if (enemy != null) 
+        if (enemy != null && !PlayerCombats.ContainsValue(enemy)) 
         {
-            CurrentEnemy = enemy;
-            _currentEnemyField = Map.GetAdjacentEnemyField(ActivePlayer.X, ActivePlayer.Y);
-            IsInCombat = true;
+            PlayerCombats[ActivePlayerId] = enemy;
             return true;
         }
         return false;
@@ -104,19 +103,21 @@ public class Model
     {
         if (!IsInCombat || CurrentEnemy == null) return;
 
+        var enemy = CurrentEnemy;
+
         int playerDamage = ActivePlayer.CalculateAttackDamage(attackVisitor);
         int playerDefense = ActivePlayer.CalculateDefense(defenseVisitor);
         
-        int damageToEnemy = Math.Max(0, playerDamage - CurrentEnemy.Armor);
-        int damageToPlayer = Math.Max(0, CurrentEnemy.Attack - playerDefense);
+        int damageToEnemy = Math.Max(0, playerDamage - enemy.Armor);
+        int damageToPlayer = Math.Max(0, enemy.Attack - playerDefense);
         
-        GameLog.Instance.Log($"{ActivePlayer.Name} dealt {damageToEnemy}DMG to enemy ({CurrentEnemy.Name})");
+        GameLog.Instance.Log($"{ActivePlayer.Name} dealt {damageToEnemy}DMG to enemy ({enemy.Name})");
         GameLog.Instance.Log($"Enemy dealt {damageToPlayer}DMG to {ActivePlayer.Name}");
 
-        CurrentEnemy.Health -= damageToEnemy;
+        enemy.Health -= damageToEnemy;
         ActivePlayer.Health -= damageToPlayer;
 
-        if (CurrentEnemy.Health <= 0 || ActivePlayer.Health <= 0)
+        if (enemy.Health <= 0 || ActivePlayer.Health <= 0)
         {
             EndCombat();
         }
@@ -127,26 +128,26 @@ public class Model
         if (!IsInCombat) return;
 
         GameLog.Instance.Log($"Player ({ActivePlayer.Name}) fled from combat!");
-        IsInCombat = false;
-        CurrentEnemy = null;
+        PlayerCombats.Remove(ActivePlayerId);
     }
 
     private void EndCombat()
     {
-        if (CurrentEnemy != null && CurrentEnemy.Health <= 0)
+        var enemy = CurrentEnemy;
+        if (enemy != null && enemy.Health <= 0)
         {
-            CurrentEnemy.Notify(new EnemyDiedEvent(CurrentEnemy));
-            CurrentEnemy.Unsubscribe(CurrentEnemy.Species);
-            Map.RemoveEnemy(CurrentEnemy);
-            CurrentEnemy.Species.RemoveMember(CurrentEnemy);
-            Map.Unsubscribe(CurrentEnemy);
-            _currentEnemyField?.SetEnemy(null);
-            GameLog.Instance.Log($"Player defeated enemy ({CurrentEnemy.Name})");
+            enemy.Notify(new EnemyDiedEvent(enemy));
+            enemy.Unsubscribe(enemy.Species);
+            Map.RemoveEnemy(enemy);
+            enemy.Species.RemoveMember(enemy);
+            Map.Unsubscribe(enemy);
+            
+            Map.GetField(enemy.X, enemy.Y).SetEnemy(null);
+            
+            GameLog.Instance.Log($"Player defeated enemy ({enemy.Name})");
         }
         
-        IsInCombat = false;
-        CurrentEnemy = null;
-        _currentEnemyField = null;
+        PlayerCombats.Remove(ActivePlayerId);
         
         if (ActivePlayer.Health <= 0 && ActivePlayer.Id == LocalPlayerId)
         {
