@@ -1,6 +1,9 @@
+using System;
+using System.IO;
 using System.Text;
 using RPG_Game;
 using RPG_Game.Logger;
+using RPG_Game.Runners;
 
 Console.OutputEncoding = Encoding.UTF8;
 
@@ -8,37 +11,45 @@ var config = Config.Load("config.json");
 string logFile = Path.Combine(config.LogPath, $"{config.PlayerName}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
 GameLog.Instance = new GameLogger(logFile);
 
-Model model = new Model(config.PlayerName);
-GameRender view = new GameRender();
-Controller controller = new Controller();
+bool isServer = false;
+string ip = "127.0.0.1";
+int port = 5555;
 
-Console.CursorVisible = false;
-Console.Clear();
-
-Console.WriteLine(model.Theme.IntroMessage);
-Console.ReadKey(true);
-Console.Clear();
-
-while (!model.IsGameOver)
+if (args.Length > 0)
 {
-    if (model.ShowFullLog)
+    if (args[0] == "--server")
     {
-        view.DrawFullLog();
+        isServer = true;
+        if (args.Length > 1) int.TryParse(args[1], out port);
     }
-    else if (model.IsInCombat)
+    else if (args[0] == "--client")
     {
-        view.DrawCombat(model.LocalPlayer, model.CurrentEnemy!, model.Map.Width);
-        
+        isServer = false;
+        if (args.Length > 1)
+        {
+            var parts = args[1].Split(':');
+            ip = parts[0];
+            if (parts.Length > 1) int.TryParse(parts[1], out port);
+        }
     }
-    else
-    {
-        view.DrawMap(model.Map, model.Map.Height, model.Map.Width, model.Players);
-        view.Info(model.Map.Width, model.LocalPlayer, model.Map);
-    }
-
-    controller.HandleInput(model);
-
-    model.Update(); 
+}
+else
+{
+    Console.Clear();
+    Console.WriteLine("Start as Server [S] or Client [C]?");
+    var choice = Console.ReadKey(true).Key;
+    isServer = (choice == ConsoleKey.S);
 }
 
-view.DrawGameOver();
+IGameRunner runner;
+
+if (isServer)
+{
+    runner = new ServerRunner(config.PlayerName, port);
+}
+else
+{
+    runner = new ClientRunner(config.PlayerName, ip, port);
+}
+
+runner.Run();
